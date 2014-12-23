@@ -20,7 +20,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/signupUsernameText"
+            android:id="@+id/signupUsernameField"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="180dp"
             android:hint="@string/username_field_hint" />
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
             android:ems="10"
-            android:id="@+id/signupEmailText"
+            android:id="@+id/signupEmailField"
             android:hint="@string/email_field_hint" />
 
         <EditText
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:inputType="textPassword"
             android:ems="10"
-            android:id="@+id/signupPasswordText"
+            android:id="@+id/signupPasswordField"
             android:layout_gravity="center_horizontal"
             android:text="@string/password_field_hint" />
 
@@ -46,7 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Signup"
-            android:id="@+id/button"
+            android:id="@+id/signupButton"
             android:layout_gravity="center_horizontal" />
 
         <TextView
@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Already have an account? Login here"
-            android:id="@+id/textView"
+            android:id="@+id/signupLoginText"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="100dp"/>
     </LinearLayout>

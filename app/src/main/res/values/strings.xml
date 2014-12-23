@@ -9,5 +9,9 @@
     <string name="password_field_hint">Password</string>
     <string name="title_activity_signup">SignupActivity</string>
     <string name="email_field_hint">Email</string>
+    <string name="signup_error_message">Username, Password, and Email can\'t be empty</string>
+    <string name="signup_error_title">Signup Error</string>
+    <string name="login_error_message">Username and Password can\'t be empty</string>
+    <string name="login_error_title">Login Error</string>
 
 </resources>
