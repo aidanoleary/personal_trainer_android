@@ -28,11 +28,10 @@ public class MainActivity extends Activity {
         }
         else {
             Log.i(TAG, currentUser.getUsername());
+            //Set the text for the welcome text field
+            mWelcomeText = (TextView) findViewById(R.id.welcomeText);
+            mWelcomeText.setText("Hello " + currentUser.getUsername());
         }
-
-        //Set the text for the welcome text field
-        mWelcomeText = (TextView) findViewById(R.id.welcomeText);
-        mWelcomeText.setText("Hello " + currentUser.getUsername());
 
     }
 
@@ -56,6 +55,7 @@ public class MainActivity extends Activity {
         else if (id == R.id.action_logout) {
             //If the logout button has been pressed logout of the application
             ParseUser.logOut();
+            navigateToLogin();
         }
         return super.onOptionsItemSelected(item);
     }

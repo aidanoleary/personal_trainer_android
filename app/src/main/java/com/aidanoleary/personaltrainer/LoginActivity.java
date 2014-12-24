@@ -12,6 +12,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.parse.LogInCallback;
+import com.parse.ParseException;
+import com.parse.ParseUser;
+
 
 public class LoginActivity extends Activity {
 
@@ -61,21 +65,7 @@ public class LoginActivity extends Activity {
                     //Make progress indicator visible
                     setProgressBarIndeterminateVisibility(true);
 
-
-
-
-
-
-
-                    //Don't forget to set the progress bar to false
-                    //setProgressBarIndeterminateVisibility(false);
-
-
-
-
-
-
-                    /*
+                    //Login in the background using parse
                     ParseUser.logInInBackground(username, password, new LogInCallback() {
                         @Override
                         public void done(ParseUser parseUser, ParseException e) {
@@ -100,7 +90,7 @@ public class LoginActivity extends Activity {
                             }
                         }
                     });
-                    */
+
                 }
             }
         });
