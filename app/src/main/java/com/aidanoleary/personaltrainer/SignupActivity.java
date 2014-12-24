@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,6 +11,10 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.parse.ParseException;
+import com.parse.ParseUser;
+import com.parse.SignUpCallback;
 
 
 public class SignupActivity extends Activity {
@@ -60,10 +63,7 @@ public class SignupActivity extends Activity {
                     dialog.show();
                 }
                 else {
-                    // Create the new user using Async task
-                    Log.v("Hello", "signup success");
-
-                    /*
+                    //Set the loading spinner to visible
                     setProgressBarIndeterminateVisibility(true);
 
                     ParseUser newUser = new ParseUser();
@@ -73,17 +73,18 @@ public class SignupActivity extends Activity {
                     newUser.signUpInBackground(new SignUpCallback() {
                         @Override
                         public void done(ParseException e) {
+                            //Set the loading spinner to invisible
                             setProgressBarIndeterminateVisibility(false);
 
                             if(e == null) {
                                 // The new user was successfully created
-                                Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                                Intent intent = new Intent(SignupActivity.this, MainActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(intent);
                             }
                             else {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(SignUpActivity.this);
+                                AlertDialog.Builder builder = new AlertDialog.Builder(SignupActivity.this);
                                 builder.setMessage(e.getMessage());
                                 builder.setTitle(R.string.signup_error_title);
                                 builder.setPositiveButton(android.R.string.ok, null);
@@ -93,7 +94,6 @@ public class SignupActivity extends Activity {
                             }
                         }
                     });
-                    */
                 }
             }
         });
