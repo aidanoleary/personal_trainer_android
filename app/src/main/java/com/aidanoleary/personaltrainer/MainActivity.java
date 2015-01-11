@@ -31,6 +31,13 @@ public class MainActivity extends Activity {
             //Set the text for the welcome text field
             mWelcomeText = (TextView) findViewById(R.id.welcomeText);
             mWelcomeText.setText("Hello " + currentUser.getUsername());
+
+            //Change this later on but for now leave it as it is
+            // ***********************************************************************
+            Intent intent = new Intent(this, NavigationActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         }
 
     }

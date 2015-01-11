@@ -1,22 +1,19 @@
 package com.aidanoleary.personaltrainer;
 
-import android.app.Activity;
-
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
-import android.os.Build;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
+import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
+
+import com.parse.ParseUser;
 
 
 public class NavigationActivity extends Activity
@@ -47,12 +44,32 @@ public class NavigationActivity extends Activity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
     }
 
+
+
+    // This is the method that deals with replacing the current fragment when the button is
+    // pressed.
     @Override
     public void onNavigationDrawerItemSelected(int position) {
+
+        Fragment objFragment = null;
+        switch (position) {
+            case 0:
+                objFragment = new HomeFragment();
+                break;
+            case 1:
+                objFragment = new ProfileFragment();
+                break;
+            case 2:
+                objFragment = new AchievementsFragment();
+                break;
+            case 3:
+                objFragment = new LogsFragment();
+        }
+
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+                .replace(R.id.container, objFragment)
                 .commit();
     }
 
@@ -67,6 +84,8 @@ public class NavigationActivity extends Activity
             case 3:
                 mTitle = getString(R.string.title_section3);
                 break;
+            case 4:
+                mTitle = getString(R.string.title_section4);
         }
     }
 
@@ -84,7 +103,7 @@ public class NavigationActivity extends Activity
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
-            getMenuInflater().inflate(R.menu.navigation, menu);
+            getMenuInflater().inflate(R.menu.main, menu);
             restoreActionBar();
             return true;
         }
@@ -98,6 +117,12 @@ public class NavigationActivity extends Activity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            return true;
+        }
+        else if (id == R.id.action_logout) {
+            ParseUser.logOut();
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
