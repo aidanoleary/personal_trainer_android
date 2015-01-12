@@ -122,6 +122,8 @@ public class NavigationActivity extends Activity
         else if (id == R.id.action_logout) {
             ParseUser.logOut();
             Intent intent = new Intent(this, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             return true;
         }
