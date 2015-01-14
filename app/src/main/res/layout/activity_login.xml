@@ -26,7 +26,8 @@
                 android:layout_marginTop="180dp"
                 android:hint="@string/username_field_hint"
                 android:singleLine="false"
-                android:background="#ffcccccc" />
+                android:background="#ffcccccc"
+                android:padding="5dp" />
 
             <EditText
                 android:layout_width="match_parent"
@@ -38,7 +39,8 @@
                 android:password="true"
                 android:hint="@string/password_field_hint"
                 android:background="#CCCCCC"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp"
+                android:padding="5dp" />
 
             <Button
                 android:layout_width="match_parent"
