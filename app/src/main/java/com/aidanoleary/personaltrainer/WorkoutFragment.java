@@ -10,12 +10,12 @@ import android.view.ViewGroup;
 /**
  * Created by aidanoleary on 11/01/2015.
  */
-public class HomeFragment extends Fragment {
+public class WorkoutFragment extends Fragment {
     View rootView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_home, container, false);
+        rootView = inflater.inflate(R.layout.fragment_workout, container, false);
         return rootView;
     }
 }

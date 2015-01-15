@@ -14,7 +14,7 @@
     <string name="login_error_message">Username and Password can\'t be empty</string>
     <string name="login_error_title">Login Error</string>
     <string name="title_activity_navigation">Personal Trainer</string>
-    <string name="title_section1">Home</string>
+    <string name="title_section1">Workout</string>
     <string name="title_section2">Profile</string>
     <string name="title_section3">Achievements</string>
     <string name="title_section4">Logs</string>

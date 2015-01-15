@@ -59,15 +59,28 @@ public class MainActivity extends Activity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-        //Check if the database exists and create it if it doesn't
+        // =====================
+        // SQLite Database tasks
+        // ======================
+        // Check if the database exists and create it if it doesn't
         createDB();
+
+        // Initialise DBAdapter to communicate with the pre configured database
         db = new DBAdapter(this);
+
+        // Test the database connection
         try {
             db.open();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         db.close();
+        // =======================
+
+
+        // =======================
+        // User Login Check
+        // =======================
 
         //Check if user is logged in and get the current user.
         ParseUser currentUser = ParseUser.getCurrentUser();
@@ -76,6 +89,8 @@ public class MainActivity extends Activity
             navigateToLogin();
         }
         else {
+
+            // Add code to perform once user is logged in here
             /*
             Log.i(TAG, currentUser.getUsername());
             //Set the text for the welcome text field
@@ -91,7 +106,7 @@ public class MainActivity extends Activity
             */
 
 
-
+            /*
             // Check if the database exists and create it if it doesn't
             createDB();
 
@@ -103,6 +118,7 @@ public class MainActivity extends Activity
                 e.printStackTrace();
             }
             db.close();
+            */
         }
     }
 
@@ -116,7 +132,7 @@ public class MainActivity extends Activity
         Fragment objFragment = null;
         switch (position) {
             case 0:
-                objFragment = new HomeFragment();
+                objFragment = new WorkoutFragment();
                 break;
             case 1:
                 objFragment = new ProfileFragment();
@@ -126,7 +142,11 @@ public class MainActivity extends Activity
                 break;
             case 3:
                 objFragment = new LogsFragment();
+                break;
         }
+
+        // update the nav bar to display the selected button
+        onSectionAttached(position + 1);
 
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
@@ -135,6 +155,7 @@ public class MainActivity extends Activity
                 .commit();
     }
 
+    // used to change the navbar title when a new fragment is attached
     public void onSectionAttached(int number) {
         switch (number) {
             case 1:
