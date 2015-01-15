@@ -1,14 +1,18 @@
 package com.aidanoleary.personaltrainer;
 
+import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.parse.ParseUser;
 
@@ -18,21 +22,52 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.sql.SQLException;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     private static String TAG = MainActivity.class.getSimpleName();
-    protected TextView mWelcomeText;
 
+    /**
+     * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
+     */
+    private NavigationDrawerFragment mNavigationDrawerFragment;
 
+    /**
+     * Used to store the last screen title. For use in {@link #restoreActionBar()}.
+     */
+    private CharSequence mTitle;
+
+    /*
+     * Stores a object to interact with the local sql database
+     */
+    DBAdapter db;
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mNavigationDrawerFragment = (NavigationDrawerFragment)
+                getFragmentManager().findFragmentById(R.id.navigation_drawer);
+        mTitle = getTitle();
+
+        // Set up the drawer.
+        mNavigationDrawerFragment.setUp(
+                R.id.navigation_drawer,
+                (DrawerLayout) findViewById(R.id.drawer_layout));
+
         //Check if the database exists and create it if it doesn't
         createDB();
-        Log.v("Database Exists?", "" + checkDataBase());
+        db = new DBAdapter(this);
+        try {
+            db.open();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        db.close();
 
         //Check if user is logged in and get the current user.
         ParseUser currentUser = ParseUser.getCurrentUser();
@@ -41,6 +76,7 @@ public class MainActivity extends Activity {
             navigateToLogin();
         }
         else {
+            /*
             Log.i(TAG, currentUser.getUsername());
             //Set the text for the welcome text field
             mWelcomeText = (TextView) findViewById(R.id.welcomeText);
@@ -52,16 +88,88 @@ public class MainActivity extends Activity {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            */
+
+
+
+            // Check if the database exists and create it if it doesn't
+            createDB();
+
+            // Get the local sqlite database object
+            db = new DBAdapter(this);
+            try {
+                db.open();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            db.close();
+        }
+    }
+
+
+
+    // This is the method that deals with replacing the current fragment when the button is
+    // pressed.
+    @Override
+    public void onNavigationDrawerItemSelected(int position) {
+
+        Fragment objFragment = null;
+        switch (position) {
+            case 0:
+                objFragment = new HomeFragment();
+                break;
+            case 1:
+                objFragment = new ProfileFragment();
+                break;
+            case 2:
+                objFragment = new AchievementsFragment();
+                break;
+            case 3:
+                objFragment = new LogsFragment();
         }
 
+        // update the main content by replacing fragments
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, objFragment)
+                .commit();
+    }
+
+    public void onSectionAttached(int number) {
+        switch (number) {
+            case 1:
+                mTitle = getString(R.string.title_section1);
+                break;
+            case 2:
+                mTitle = getString(R.string.title_section2);
+                break;
+            case 3:
+                mTitle = getString(R.string.title_section3);
+                break;
+            case 4:
+                mTitle = getString(R.string.title_section4);
+        }
+    }
+
+    public void restoreActionBar() {
+        ActionBar actionBar = getActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setTitle(mTitle);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+        if (!mNavigationDrawerFragment.isDrawerOpen()) {
+            // Only show items in the action bar relevant to this screen
+            // if the drawer is not showing. Otherwise, let the drawer
+            // decide what to show in the action bar.
+            getMenuInflater().inflate(R.menu.main, menu);
+            restoreActionBar();
+            return true;
+        }
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -74,12 +182,58 @@ public class MainActivity extends Activity {
             return true;
         }
         else if (id == R.id.action_logout) {
-            //If the logout button has been pressed logout of the application
             ParseUser.logOut();
-            navigateToLogin();
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
+    /**
+     * A placeholder fragment containing a simple view.
+     */
+    public static class PlaceholderFragment extends Fragment {
+        /**
+         * The fragment argument representing the section number for this
+         * fragment.
+         */
+        private static final String ARG_SECTION_NUMBER = "section_number";
+
+        /**
+         * Returns a new instance of this fragment for the given section
+         * number.
+         */
+        public static PlaceholderFragment newInstance(int sectionNumber) {
+            PlaceholderFragment fragment = new PlaceholderFragment();
+            Bundle args = new Bundle();
+            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        public PlaceholderFragment() {
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            return rootView;
+        }
+
+        @Override
+        public void onAttach(Activity activity) {
+            super.onAttach(activity);
+            ((MainActivity) activity).onSectionAttached(
+                    getArguments().getInt(ARG_SECTION_NUMBER));
+        }
+    }
+
+    // Helper functions
+    // ===================
 
     // A method for navigating to the log in screen.
     private void navigateToLogin() {
@@ -131,15 +285,4 @@ public class MainActivity extends Activity {
         }
     }
 
-    private boolean checkDataBase() {
-        SQLiteDatabase checkDB = null;
-        try {
-            checkDB = SQLiteDatabase.openDatabase("/data/data/" + getPackageName() + "/databases" + "MyDb", null,
-                    SQLiteDatabase.OPEN_READONLY);
-            checkDB.close();
-        } catch (SQLiteException e) {
-            // database doesn't exist yet.
-        }
-        return checkDB != null ? true : false;
-    }
 }
