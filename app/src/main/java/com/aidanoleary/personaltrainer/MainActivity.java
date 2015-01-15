@@ -26,14 +26,14 @@ import java.sql.SQLException;
 
 
 public class MainActivity extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements MainDrawerFragment.NavigationDrawerCallbacks {
 
     private static String TAG = MainActivity.class.getSimpleName();
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
-    private NavigationDrawerFragment mNavigationDrawerFragment;
+    private MainDrawerFragment mNavigationDrawerFragment;
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -50,7 +50,7 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
+        mNavigationDrawerFragment = (MainDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
 
