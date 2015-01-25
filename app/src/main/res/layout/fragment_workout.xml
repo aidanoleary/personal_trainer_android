@@ -7,8 +7,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Home Fragment"
+        android:text="Workout schedule"
         android:id="@+id/HtextView"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listView"
+        android:layout_below="@+id/HtextView"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

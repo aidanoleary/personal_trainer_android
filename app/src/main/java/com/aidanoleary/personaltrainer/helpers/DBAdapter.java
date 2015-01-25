@@ -1,4 +1,4 @@
-package com.aidanoleary.personaltrainer;
+package com.aidanoleary.personaltrainer.helpers;
 
 import android.content.ContentValues;
 import android.content.Context;

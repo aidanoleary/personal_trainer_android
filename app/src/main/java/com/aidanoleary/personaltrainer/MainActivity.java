@@ -14,6 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.aidanoleary.personaltrainer.helpers.DBAdapter;
+import com.aidanoleary.personaltrainer.models.User;
 import com.parse.ParseUser;
 
 import java.io.File;
@@ -119,6 +121,8 @@ public class MainActivity extends Activity
             }
             db.close();
             */
+
+            User user1 = new User();
         }
     }
 
@@ -130,8 +134,11 @@ public class MainActivity extends Activity
     public void onNavigationDrawerItemSelected(int position) {
 
         Fragment objFragment = null;
+        //ListFragment objListFragment = null;
+
         switch (position) {
             case 0:
+                //objListFragment = new WorkoutFragment();
                 objFragment = new WorkoutFragment();
                 break;
             case 1:
@@ -143,12 +150,31 @@ public class MainActivity extends Activity
             case 3:
                 objFragment = new LogsFragment();
                 break;
+            case 4:
+                objFragment = new SettingsFragment();
+                break;
         }
 
         // update the nav bar to display the selected button
         onSectionAttached(position + 1);
 
         // update the main content by replacing fragments
+        // Check if the fragment needs to be a fragment or list fragment
+        // Change this later on.
+        /*
+        if(position == 0) {
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, objListFragment)
+                    .commit();
+        }
+        else {
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, objFragment)
+                    .commit();
+        }
+        */
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.container, objFragment)
@@ -169,6 +195,10 @@ public class MainActivity extends Activity
                 break;
             case 4:
                 mTitle = getString(R.string.title_section4);
+                break;
+            case 5:
+                mTitle = getString(R.string.title_section5);
+                break;
         }
     }
 

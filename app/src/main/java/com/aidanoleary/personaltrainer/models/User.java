@@ -1,15 +1,15 @@
-package com.aidanoleary.personaltrainer;
+package com.aidanoleary.personaltrainer.models;
 
 /**
  * Created by aidanoleary on 14/01/2015.
  * A model for the User
  */
 public class User {
-    int id;
-    String email;
-    int age;
-    String gender;
-    String created_at;
+    private int id;
+    private String email;
+    private int age;
+    private String gender;
+    private String authorizationToken;
 
     // constructors
     public User() {
@@ -21,9 +21,10 @@ public class User {
         this.gender = gender;
     }
 
-    public User(int id, String email, int age, String gender) {
+    public User(int id, String email, String authorizationToken, int age, String gender) {
         this.id = id;
         this.email = email;
+        this.authorizationToken = authorizationToken;
         this.age = age;
         this.gender = gender;
     }
@@ -45,8 +46,8 @@ public class User {
         this.gender = gender;
     }
 
-    public void setCreatedAt(String created_at){
-        this.created_at = created_at;
+    public void setAuthorizationToken(String authorizationToken) {
+        this.authorizationToken = authorizationToken;
     }
 
     // getters
@@ -65,4 +66,6 @@ public class User {
     public String getGender() {
         return this.gender;
     }
+
+    public String getAuthorizationToken() { return this.authorizationToken; }
 }
