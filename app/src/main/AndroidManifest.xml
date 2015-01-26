@@ -25,6 +25,10 @@
             android:name=".SignupActivity"
             android:label="@string/title_activity_signup" >
         </activity>
+        <activity
+            android:name=".GenerateRoutineActivity"
+            android:label="@string/title_activity_generate_routine" >
+        </activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
