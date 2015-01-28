@@ -283,4 +283,11 @@ public class MainDrawerFragment extends Fragment {
          */
         void onNavigationDrawerItemSelected(int position);
     }
+
+    // Added by me
+    // Close the drawer this will be used when the navigation drawer is first initialised
+    // in the main activity
+    public void closeDrawer() {
+        mDrawerLayout.closeDrawer(mFragmentContainerView);
+    }
 }

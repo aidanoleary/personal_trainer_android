@@ -61,6 +61,9 @@ public class MainActivity extends Activity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
+        // Close the navigation drawer when the main activity is first accessed.
+        mNavigationDrawerFragment.closeDrawer();
+
         // =====================
         // SQLite Database tasks
         // ======================

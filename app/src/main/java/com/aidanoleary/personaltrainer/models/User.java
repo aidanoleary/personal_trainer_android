@@ -9,7 +9,9 @@ public class User {
     private String email;
     private int age;
     private String gender;
+    private int fitnessLevel;
     private String authorizationToken;
+    private Routine routine;
 
     // constructors
     public User() {
@@ -50,6 +52,14 @@ public class User {
         this.authorizationToken = authorizationToken;
     }
 
+    public void setFitnessLevel(int fitnessLevel) {
+        this.fitnessLevel = fitnessLevel;
+    }
+
+    public void setRoutine(Routine routine) {
+        this.routine = routine;
+    }
+
     // getters
     public long getId() {
         return this.id;
@@ -68,4 +78,12 @@ public class User {
     }
 
     public String getAuthorizationToken() { return this.authorizationToken; }
+
+    public int getFitnessLevel() {
+        return this.fitnessLevel;
+    }
+
+    public Routine getRoutine() {
+        return this.routine;
+    }
 }
