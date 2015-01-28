@@ -1,12 +1,14 @@
 package com.aidanoleary.personaltrainer;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -24,14 +26,91 @@ public class GenerateRoutineActivity extends Activity {
     private TextView questionText;
     private LinearLayout answersLayout;
     private Button confirmButton;
+    private Button backButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_generate_routine);
+        setContentView(R.layout.activity_generate_routine1);
+        final ViewGroup mainContent = (ViewGroup) findViewById(R.id.generateContentLayout);
+
+        // Set the current question
+        currentQuestionNumber = 1;
+
+        // set the initial question number text
+        questionNumberText = (TextView) findViewById(R.id.generateQuestionNumberText);
+        questionNumberText.setText(questionNumberText.getText().toString() + currentQuestionNumber);
+
+        // Add the initial sub question layout to the activity
+        mainContent.addView(View.inflate(this, R.layout.activity_generate_routine_q1, null));
+
+        // Add the onclick listener for the confirm button
+        confirmButton = (Button) findViewById(R.id.generateConfirmButton);
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (currentQuestionNumber) {
+                    case 1:
+                        // increment question number
+                        currentQuestionNumber++;
+                        // Update Question number display
+                        questionNumberText.setText("Question: " + currentQuestionNumber);
+
+                        // Update the main content area
+                        mainContent.removeAllViews();
+
+                        //Inflate the next view
+                        mainContent.addView(View.inflate(GenerateRoutineActivity.this, R.layout.activity_generate_routine_q2, null));
+                        break;
+
+                    default:
+                        // Update the Database
+
+                        // Load the Main Activity
+                        // Set flags so user can't retreat
+                        Intent intent = new Intent(GenerateRoutineActivity.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        break;
+                }
+            }
+        });
+
+        backButton = (Button) findViewById(R.id.generateBackButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (currentQuestionNumber) {
+                    case 2:
+                        // decrement question number
+                        currentQuestionNumber--;
+                        // Update Question number display
+                        questionNumberText.setText("Question: " + currentQuestionNumber);
+
+                        // Update the main content area
+                        mainContent.removeAllViews();
+                        mainContent.addView(View.inflate(GenerateRoutineActivity.this, R.layout.activity_generate_routine_q1, null));
+                        break;
+
+                    default:
+
+                        // Load the Main Activity
+                        // Set flags so user can't retreat
+                        Intent intent = new Intent(GenerateRoutineActivity.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        break;
+                }
+            }
+        });
 
 
 
+
+        /*
         // Initialise the list of questions
         questionList = new String[]{
                 "How fit do you consider yourself?",
@@ -116,7 +195,7 @@ public class GenerateRoutineActivity extends Activity {
                 }
             }
         });
-
+*/
 
 
 

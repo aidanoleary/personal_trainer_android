@@ -33,6 +33,8 @@ public class SettingsFragment extends Fragment {
                             public void onClick(DialogInterface dialog, int id) {
                                 // User has said they want to generate a new workout
                                 Intent intent = new Intent(getActivity(), GenerateRoutineActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(intent);
                             }
                         })
