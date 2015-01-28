@@ -1,21 +1,15 @@
 package com.aidanoleary.personaltrainer;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
-
-import java.util.ArrayList;
 
 
 public class GenerateRoutineActivity extends Activity {
@@ -27,6 +21,24 @@ public class GenerateRoutineActivity extends Activity {
     private LinearLayout answersLayout;
     private Button confirmButton;
     private Button backButton;
+
+    // Variables used to generate the workout
+    // ======================================
+
+    // Workout variables
+    private String goal;
+    private String[] workoutDays;
+    private int numberOfExercises;
+    private int numberOfReps;
+    private int numberOfSets;
+
+    // user variables
+    private int usersFitnessLevel;
+    private String usersGender;
+    private int usersAge;
+    private int usersHeight;
+    private int usersWeight;
+
 
 
     @Override
@@ -52,16 +64,38 @@ public class GenerateRoutineActivity extends Activity {
             public void onClick(View v) {
                 switch (currentQuestionNumber) {
                     case 1:
-                        // increment question number
-                        currentQuestionNumber++;
-                        // Update Question number display
-                        questionNumberText.setText("Question: " + currentQuestionNumber);
+                        // Perform actions for selection
+                        // =============================
+
+
+                        // =============================
+
+                        //Increment the current question
+                        incrementQuestion();
 
                         // Update the main content area
                         mainContent.removeAllViews();
 
                         //Inflate the next view
                         mainContent.addView(View.inflate(GenerateRoutineActivity.this, R.layout.activity_generate_routine_q2, null));
+                        break;
+
+                    case 2:
+                        // Perform actions for selection
+                        // =============================
+
+
+                        // =============================
+
+                        //Increment the current question
+                        incrementQuestion();
+
+                        // Update the main content area
+                        mainContent.removeAllViews();
+                        // Inflate the next view
+                        mainContent.addView(View.inflate(GenerateRoutineActivity.this, R.layout.activity_generate_routine_q3, null));
+
+
                         break;
 
                     default:
@@ -224,5 +258,12 @@ public class GenerateRoutineActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    // A method used to increment the current question
+    // it also updates the question number display.
+    private void incrementQuestion() {
+        currentQuestionNumber++;
+        questionNumberText.setText("Question: " + currentQuestionNumber);
     }
 }
