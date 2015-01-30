@@ -21,6 +21,7 @@ public class GenerateRoutineActivity extends Activity {
     private LinearLayout answersLayout;
     private Button confirmButton;
     private Button backButton;
+    private ViewGroup mainContent;
 
     // Variables used to generate the workout
     // ======================================
@@ -38,14 +39,15 @@ public class GenerateRoutineActivity extends Activity {
     private int usersAge;
     private int usersHeight;
     private int usersWeight;
+    private int usersBMI;
 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_generate_routine1);
-        final ViewGroup mainContent = (ViewGroup) findViewById(R.id.generateContentLayout);
+        setContentView(R.layout.activity_generate_routine);
+        mainContent = (ViewGroup) findViewById(R.id.generateContentLayout);
 
         // Set the current question
         currentQuestionNumber = 1;
@@ -70,15 +72,10 @@ public class GenerateRoutineActivity extends Activity {
 
                         // =============================
 
-                        //Increment the current question
-                        incrementQuestion();
-
-                        // Update the main content area
-                        mainContent.removeAllViews();
-
-                        //Inflate the next view
-                        mainContent.addView(View.inflate(GenerateRoutineActivity.this, R.layout.activity_generate_routine_q2, null));
+                        // Update view and move to next view by using a custom function
+                        nextQuestion(R.layout.activity_generate_routine_q2);
                         break;
+
 
                     case 2:
                         // Perform actions for selection
@@ -88,17 +85,41 @@ public class GenerateRoutineActivity extends Activity {
                         // =============================
 
                         //Increment the current question
-                        incrementQuestion();
+                        nextQuestion(R.layout.activity_generate_routine_q3);
+                        break;
 
-                        // Update the main content area
-                        mainContent.removeAllViews();
-                        // Inflate the next view
-                        mainContent.addView(View.inflate(GenerateRoutineActivity.this, R.layout.activity_generate_routine_q3, null));
+                    case 3:
+                        // Perform actions for selection
+                        // =============================
 
 
+                        // =============================
+                        nextQuestion(R.layout.activity_generate_routine_q4);
+                        break;
+
+                    case 4:
+                        // Perform actions for selection
+                        // =============================
+
+
+                        // =============================
+                        nextQuestion(R.layout.activity_generate_routine_q5);
+                        break;
+
+
+                    case 5:
+                        // Perform actions for selection
+                        // =============================
+
+
+                        // =============================
+                        nextQuestion(R.layout.activity_generate_routine_q6);
                         break;
 
                     default:
+                        // Create the users workout depending on the variables that have been
+                        // generated.
+
                         // Update the Database
 
                         // Load the Main Activity
@@ -112,20 +133,33 @@ public class GenerateRoutineActivity extends Activity {
             }
         });
 
+        // Onclick listeners added to the back button that controls navigating backwards
+        // =============================================================================
         backButton = (Button) findViewById(R.id.generateBackButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (currentQuestionNumber) {
                     case 2:
-                        // decrement question number
-                        currentQuestionNumber--;
-                        // Update Question number display
-                        questionNumberText.setText("Question: " + currentQuestionNumber);
+                        previousQuestion(R.layout.activity_generate_routine_q1);
+                        break;
 
-                        // Update the main content area
-                        mainContent.removeAllViews();
-                        mainContent.addView(View.inflate(GenerateRoutineActivity.this, R.layout.activity_generate_routine_q1, null));
+                    case 3:
+                        previousQuestion(R.layout.activity_generate_routine_q2);
+                        break;
+
+
+                    case 4:
+                        previousQuestion(R.layout.activity_generate_routine_q3);
+                        break;
+
+
+                    case 5:
+                        previousQuestion(R.layout.activity_generate_routine_q4);
+                        break;
+
+                    case 6:
+                        previousQuestion(R.layout.activity_generate_routine_q5);
                         break;
 
                     default:
@@ -140,103 +174,6 @@ public class GenerateRoutineActivity extends Activity {
                 }
             }
         });
-
-
-
-
-        /*
-        // Initialise the list of questions
-        questionList = new String[]{
-                "How fit do you consider yourself?",
-                "Are you male or female?",
-                "How old are you?",
-                "How many times a week do you exercise?",
-                "What is your main goal?",
-        };
-
-        final ArrayList answersList = new ArrayList();
-
-        // Set the question number to 1.
-        currentQuestionNumber = 1;
-
-        // Get Interface Items
-        questionNumberText = (TextView) findViewById(R.id.generateQuestionNumberText);
-        questionText = (TextView) findViewById(R.id.generateQuestionText);
-        answersLayout = (LinearLayout) findViewById(R.id.answersLayout);
-        confirmButton = (Button) findViewById(R.id.generateConfirmButton);
-
-        // Initialise first values of on screen objects
-        // ===========================================
-        // Set the question number text with the current question
-        questionNumberText.setText(questionNumberText.getText().toString() + currentQuestionNumber);
-        // Set the questionText to the first question in the question list
-        questionText.setText(questionList[0]);
-        // Add the answer radio buttons
-        final RadioGroup question1Answers = new RadioGroup(this);
-        String[] responseList = new String[]{"answer 1", "answer 2", "Answer3", "Answer4", "Answer5"};
-        for(int i = 0; i < responseList.length; i++) {
-            RadioButton rb = new RadioButton(this);
-            rb.setText(responseList[i]);
-            question1Answers.addView(rb);
-        }
-        answersLayout.addView(question1Answers);
-
-
-        confirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Use a switch statement to determine what action should be performed.
-                switch (currentQuestionNumber) {
-                    // Question 1 has been submitted
-                    case 1:
-                        // Get users selections and perform correct actions.
-                        // =================================================
-
-                        // Add the index of the selected radio button to
-                        answersList.add(question1Answers.indexOfChild(findViewById(question1Answers.getCheckedRadioButtonId())));
-
-                        Log.v("Hello", "" + answersList.get(0));
-                        // Increase current question number
-                        currentQuestionNumber++;
-
-                        // Update Display contents
-                        // =======
-                        // Change the question number and question text
-                        questionNumberText.setText("Question: " + currentQuestionNumber);
-                        questionText.setText(questionList[currentQuestionNumber]);
-
-                        // Change the view attached to the answers layout.
-                        answersLayout.removeAllViews();
-
-
-                        break;
-                    // Question 2 has been submitted.
-                    case 2:
-                        break;
-
-
-                    default:
-                        // Update the Database
-
-                        // Load the Main Activity
-                        // Set flags so user can't retreat
-                        Intent intent = new Intent(GenerateRoutineActivity.this, MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                        break;
-
-                }
-            }
-        });
-*/
-
-
-
-
-
-
-
 
     }
 
@@ -260,10 +197,27 @@ public class GenerateRoutineActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    // A method used to increment the current question
-    // it also updates the question number display.
-    private void incrementQuestion() {
+
+    // Helper methods.
+    // ===============
+
+    //A method used to clear the current view and initialise a new view
+    private void changeView(int layoutId) {
+        mainContent.removeAllViews();
+        mainContent.addView(View.inflate(GenerateRoutineActivity.this, layoutId, null));
+    }
+
+    //A method to move to the next question
+    private void nextQuestion(int layoutId) {
         currentQuestionNumber++;
         questionNumberText.setText("Question: " + currentQuestionNumber);
+        changeView(layoutId);
+    }
+
+    // A method to move to the previous question
+    private void previousQuestion(int layoutId) {
+        currentQuestionNumber--;
+        questionNumberText.setText("Question: " + currentQuestionNumber);
+        changeView(layoutId);
     }
 }

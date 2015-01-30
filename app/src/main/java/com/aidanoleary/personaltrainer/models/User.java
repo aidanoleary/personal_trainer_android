@@ -9,6 +9,9 @@ public class User {
     private String email;
     private int age;
     private String gender;
+    private double height;
+    private double weight;
+    private double bmi;
     private int fitnessLevel;
     private String authorizationToken;
     private Routine routine;
@@ -52,6 +55,14 @@ public class User {
         this.authorizationToken = authorizationToken;
     }
 
+    public void setHeight(double height) {
+        this.height = height;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
+
     public void setFitnessLevel(int fitnessLevel) {
         this.fitnessLevel = fitnessLevel;
     }
@@ -85,5 +96,17 @@ public class User {
 
     public Routine getRoutine() {
         return this.routine;
+    }
+
+    public double getHeight() {
+        return height;
+    }
+
+    public double getWeight() {
+        return weight;
+    }
+
+    public double getBmi() {
+        return bmi;
     }
 }

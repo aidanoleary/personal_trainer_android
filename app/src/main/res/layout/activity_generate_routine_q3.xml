@@ -8,43 +8,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="What is your goal?"
+        android:text="How old are you?"
         android:id="@+id/textView"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="20dp" />
 
-    <RadioGroup
+    <NumberPicker
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="20sp">
+        android:id="@+id/numberPicker"
+        android:layout_gravity="center_horizontal" />
 
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Build Muscle"
-            android:id="@+id/radioButton"
-            android:checked="false" />
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Lose Weight"
-            android:id="@+id/radioButton2"
-            android:checked="false" />
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="General Fitness"
-            android:id="@+id/radioButton3"
-            android:checked="false" />
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Get Stronger"
-            android:id="@+id/radioButton4"
-            android:checked="false" />
-    </RadioGroup>
 </LinearLayout>
