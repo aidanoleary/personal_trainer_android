@@ -20,11 +20,11 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/loginUsernameField"
+                android:id="@+id/loginEmailField"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="180dp"
-                android:hint="@string/username_field_hint"
+                android:hint="@string/email_field_hint"
                 android:singleLine="false"
                 android:background="#ffcccccc"
                 android:padding="5dp" />

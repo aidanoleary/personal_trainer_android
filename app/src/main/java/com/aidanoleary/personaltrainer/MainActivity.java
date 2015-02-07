@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -15,8 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.aidanoleary.personaltrainer.helpers.DBAdapter;
-import com.aidanoleary.personaltrainer.models.User;
-import com.parse.ParseUser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -32,6 +31,7 @@ public class MainActivity extends Activity
 
     private static String TAG = MainActivity.class.getSimpleName();
 
+
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -42,10 +42,14 @@ public class MainActivity extends Activity
      */
     private CharSequence mTitle;
 
-    /*
-     * Stores a object to interact with the local sql database
-     */
+    // Stores a object to interact with the local sql database
     DBAdapter db;
+
+    // A static variable that contains the web address the web service is located on.
+    private static String API_URL = "https://cryptic-island-3034.herokuapp.com/";
+
+    // A shared preferences variable used to store the users email and auth token
+    private SharedPreferences mPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,8 +91,20 @@ public class MainActivity extends Activity
         // User Login Check
         // =======================
 
+        // Get shared preferences for the current user
+        mPreferences = getSharedPreferences("CurrentUser", MODE_PRIVATE);
+
+        // Check if the user is logged in by checking shared preferences for a authorization token
+        if(mPreferences.contains("AuthToken")) {
+            Log.v(TAG, "Contains AUTH TOKEN");
+        }
+        else {
+            navigateToLogin();
+        }
+
+        /*
         //Check if user is logged in and get the current user.
-        ParseUser currentUser = ParseUser.getCurrentUser();
+        //ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser == null) {
             //If nobody is logged in navigate to the login screen
             navigateToLogin();
@@ -96,7 +112,7 @@ public class MainActivity extends Activity
         else {
 
             // Add code to perform once user is logged in here
-            /*
+
             Log.i(TAG, currentUser.getUsername());
             //Set the text for the welcome text field
             mWelcomeText = (TextView) findViewById(R.id.welcomeText);
@@ -108,10 +124,10 @@ public class MainActivity extends Activity
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
-            */
 
 
-            /*
+
+
             // Check if the database exists and create it if it doesn't
             createDB();
 
@@ -123,10 +139,11 @@ public class MainActivity extends Activity
                 e.printStackTrace();
             }
             db.close();
-            */
+
 
             User user1 = new User();
         }
+        */
     }
 
 
@@ -161,23 +178,6 @@ public class MainActivity extends Activity
         // update the nav bar to display the selected button
         onSectionAttached(position + 1);
 
-        // update the main content by replacing fragments
-        // Check if the fragment needs to be a fragment or list fragment
-        // Change this later on.
-        /*
-        if(position == 0) {
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, objListFragment)
-                    .commit();
-        }
-        else {
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, objFragment)
-                    .commit();
-        }
-        */
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.container, objFragment)
@@ -236,11 +236,15 @@ public class MainActivity extends Activity
             return true;
         }
         else if (id == R.id.action_logout) {
-            ParseUser.logOut();
-            Intent intent = new Intent(this, LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+            //ParseUser.logOut();
+
+            // Delete the shared preferences values for the local user.
+            SharedPreferences.Editor editor = mPreferences.edit();
+            editor.remove("Email");
+            editor.remove("AuthToken");
+            editor.commit();
+
+            navigateToLogin();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -292,6 +296,8 @@ public class MainActivity extends Activity
     // A method for navigating to the log in screen.
     private void navigateToLogin() {
         Intent intent = new Intent(this, LoginActivity.class);
+        //Pass the api url to the intent.
+        intent.putExtra("apiUrl", API_URL);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
