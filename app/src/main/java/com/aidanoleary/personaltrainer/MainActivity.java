@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.aidanoleary.personaltrainer.helpers.DBAdapter;
+import com.aidanoleary.personaltrainer.models.User;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -50,6 +51,9 @@ public class MainActivity extends Activity
 
     // A shared preferences variable used to store the users email and auth token
     private SharedPreferences mPreferences;
+
+    // A object to store details for the current user
+    private User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,54 +100,20 @@ public class MainActivity extends Activity
 
         // Check if the user is logged in by checking shared preferences for a authorization token
         if(mPreferences.contains("AuthToken")) {
+            // User is logged in.
             Log.v(TAG, "Contains AUTH TOKEN");
+
+            // Create the currentUser object
+            // =============================
+            currentUser = new User();
+            // Get the user's email from shared preferences
+            currentUser.setEmail(mPreferences.getString("Email", ""));
+            Log.v(TAG, "currentUser is: " + currentUser.getEmail());
         }
         else {
             navigateToLogin();
         }
 
-        /*
-        //Check if user is logged in and get the current user.
-        //ParseUser currentUser = ParseUser.getCurrentUser();
-        if (currentUser == null) {
-            //If nobody is logged in navigate to the login screen
-            navigateToLogin();
-        }
-        else {
-
-            // Add code to perform once user is logged in here
-
-            Log.i(TAG, currentUser.getUsername());
-            //Set the text for the welcome text field
-            mWelcomeText = (TextView) findViewById(R.id.welcomeText);
-            mWelcomeText.setText("Hello " + currentUser.getUsername());
-
-            //Change this later on but for now leave it as it is
-            // ***********************************************************************
-            Intent intent = new Intent(this, NavigationActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-
-
-
-
-            // Check if the database exists and create it if it doesn't
-            createDB();
-
-            // Get the local sqlite database object
-            db = new DBAdapter(this);
-            try {
-                db.open();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            db.close();
-
-
-            User user1 = new User();
-        }
-        */
     }
 
 
