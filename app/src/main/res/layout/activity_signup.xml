@@ -21,20 +21,22 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/signupUsernameField"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="180dp"
-            android:hint="@string/username_field_hint"
+            android:inputType="textEmailAddress"
+            android:ems="10"
+            android:id="@+id/signupEmailField"
+            android:hint="@string/email_field_hint"
             android:background="#CCCCCC"
+            android:layout_marginTop="180dp"
             android:padding="5dp" />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
+            android:inputType="textPassword"
             android:ems="10"
-            android:id="@+id/signupEmailField"
-            android:hint="@string/email_field_hint"
+            android:id="@+id/signupPasswordField"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/password_field_hint"
             android:background="#CCCCCC"
             android:layout_marginTop="20dp"
             android:padding="5dp" />
@@ -44,7 +46,7 @@
             android:layout_height="wrap_content"
             android:inputType="textPassword"
             android:ems="10"
-            android:id="@+id/signupPasswordField"
+            android:id="@+id/signupPasswordConfirmationField"
             android:layout_gravity="center_horizontal"
             android:text="@string/password_field_hint"
             android:background="#CCCCCC"

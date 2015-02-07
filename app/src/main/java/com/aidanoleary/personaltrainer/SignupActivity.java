@@ -3,7 +3,9 @@ package com.aidanoleary.personaltrainer;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,19 +13,34 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.parse.ParseException;
-import com.parse.ParseUser;
-import com.parse.SignUpCallback;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 
 public class SignupActivity extends Activity {
 
-    protected EditText mUsername;
-    protected EditText mPassword;
-    protected EditText mEmail;
+    private static String TAG = SignupActivity.class.getSimpleName();
+
+    protected EditText mEmailText;
+    protected EditText mPasswordText;
+    protected EditText mPasswordConfirmationText;
     protected Button mSignupButton;
     protected TextView mLoginText;
+    private String signupUrl;
+    private String mEmail;
+    private String mPassword;
+    private String mPasswordConfirmation;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,11 +48,12 @@ public class SignupActivity extends Activity {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_signup);
 
+        signupUrl = getIntent().getStringExtra("apiUrl") + "users";
 
         //Get User interface objects
-        mUsername = (EditText) findViewById(R.id.signupUsernameField);
-        mPassword = (EditText) findViewById(R.id.signupPasswordField);
-        mEmail = (EditText) findViewById(R.id.signupEmailField);
+        mEmailText = (EditText) findViewById(R.id.signupEmailField);
+        mPasswordText = (EditText) findViewById(R.id.signupPasswordField);
+        mPasswordConfirmationText = (EditText) findViewById(R.id.signupPasswordConfirmationField);
         mSignupButton = (Button) findViewById(R.id.signupButton);
         mLoginText = (TextView) findViewById(R.id.signupLoginText);
 
@@ -44,16 +62,12 @@ public class SignupActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                String username = mUsername.getText().toString();
-                String password = mPassword.getText().toString();
-                String email = mEmail.getText().toString();
-
-                username = username.trim();
-                password = password.trim();
-                email = email.trim();
+                mEmail = mEmailText.getText().toString().trim();
+                mPassword = mPasswordText.getText().toString().trim();
+                mPasswordConfirmation = mPasswordConfirmationText.getText().toString().trim();
 
                 //Check if any of the fields are empty
-                if(username.isEmpty() || password.isEmpty() || email.isEmpty()) {
+                if(mEmail.isEmpty() || mPassword.isEmpty()) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(SignupActivity.this);
                     builder.setMessage(R.string.signup_error_message);
                     builder.setTitle(R.string.signup_error_title);
@@ -63,37 +77,22 @@ public class SignupActivity extends Activity {
                     dialog.show();
                 }
                 else {
-                    //Set the loading spinner to visible
-                    setProgressBarIndeterminateVisibility(true);
+                    // Check if the password matches the confirmation
+                    if (!mPassword.equals(mPasswordConfirmation)) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(SignupActivity.this);
+                        builder.setMessage(getString(R.string.signup_error_password_match));
+                        builder.setTitle(R.string.signup_error_title);
+                        builder.setPositiveButton(android.R.string.ok, null);
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                    }
+                    else {
+                        //Set the loading spinner to visible
+                        setProgressBarIndeterminateVisibility(true);
+                        new SignupTask().execute(signupUrl);
+                        setProgressBarIndeterminateVisibility(false);
 
-                    ParseUser newUser = new ParseUser();
-                    newUser.setUsername(username);
-                    newUser.setPassword(password);
-                    newUser.setEmail(email);
-                    newUser.signUpInBackground(new SignUpCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            //Set the loading spinner to invisible
-                            setProgressBarIndeterminateVisibility(false);
-
-                            if(e == null) {
-                                // The new user was successfully created
-                                Intent intent = new Intent(SignupActivity.this, MainActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(intent);
-                            }
-                            else {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(SignupActivity.this);
-                                builder.setMessage(e.getMessage());
-                                builder.setTitle(R.string.signup_error_title);
-                                builder.setPositiveButton(android.R.string.ok, null);
-
-                                AlertDialog dialog = builder.create();
-                                dialog.show();
-                            }
-                        }
-                    });
+                    }
                 }
             }
         });
@@ -102,6 +101,9 @@ public class SignupActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+                intent.putExtra("apiUrl", getIntent().getStringExtra("apiUrl"));
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             }
         });
@@ -125,5 +127,88 @@ public class SignupActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    // A inner Async task for signing the user up to the application
+    private class SignupTask extends AsyncTask <String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... urls) {
+            JSONObject userJson = new JSONObject();
+            JSONObject holderJson = new JSONObject();
+
+            StringBuilder stringBuilder = new StringBuilder();
+            try {
+
+                HttpClient httpClient = new DefaultHttpClient();
+                HttpPost httpPost = new HttpPost(urls[0]);
+
+                // Set the headers
+                httpPost.setHeader("Accept", "application/json");
+                httpPost.setHeader("Content-Type", "application/json");
+
+                // JSON items to post to the server
+                // Post the users email and password.
+                userJson.put("email", mEmail);
+                userJson.put("password", mPassword);
+                holderJson.put("user", userJson);
+
+                StringEntity stringEntity = new StringEntity(holderJson.toString());
+                httpPost.setEntity(stringEntity);
+
+                // Post to the server and get a response
+                HttpResponse response = httpClient.execute(httpPost);
+
+                InputStream inputStream = response.getEntity().getContent();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                String line;
+                // Loop through the output of the stream reader and concatenate it to the string builder object
+                while ((line = reader.readLine()) != null) {
+                    stringBuilder.append(line);
+                }
+                inputStream.close();
+
+            } catch (Exception e) {
+                Log.d(TAG, e.getLocalizedMessage());
+            }
+            return stringBuilder.toString();
+        }
+
+        protected void onPostExecute(String result) {
+            Log.v(TAG, result);
+            // Convert the response to a JSON object
+            try {
+                // Set the Json object to initial values just in case
+                // something goes wrong.
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("success", false);
+                jsonObject.put("info", "Something went wrong, Retry!");
+
+                // Make the jsonObject a new Json object of the results.
+                jsonObject = new JSONObject(result);
+                if (jsonObject.has("success")) {
+                    // Check if the response is successful
+                    if (jsonObject.getBoolean("success")) {
+
+                        // Launch the main activity
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                        Toast.makeText(SignupActivity.this, jsonObject.getString("info"), Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        Toast.makeText(SignupActivity.this, jsonObject.getString("info"), Toast.LENGTH_LONG).show();
+                    }
+                }
+                else {
+                    Toast.makeText(SignupActivity.this, jsonObject.getString("error"), Toast.LENGTH_LONG).show();
+                }
+            } catch (Exception e) {
+                // Show a toast displaying what went wrong
+                Toast.makeText(SignupActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+            } finally {
+                super.onPostExecute(result);
+            }
+        }
     }
 }

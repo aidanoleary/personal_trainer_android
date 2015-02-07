@@ -36,7 +36,7 @@ public class LoginActivity extends Activity {
     protected EditText mPasswordText;
     protected Button mLoginButton;
     protected TextView mSignUpText;
-    private String apiUrl;
+    private String loginUrl;
     private SharedPreferences mPreferences;
     private String mEmail;
     private String mPassword;
@@ -51,7 +51,7 @@ public class LoginActivity extends Activity {
 
         setContentView(R.layout.activity_login);
         //Get the apiUrl that was passed to the intent.
-        apiUrl = getIntent().getStringExtra("apiUrl");
+        loginUrl = getIntent().getStringExtra("apiUrl") + "users/sign_in";
         mPreferences = getSharedPreferences("CurrentUser", MODE_PRIVATE);
 
         //Get user interface objects
@@ -85,35 +85,8 @@ public class LoginActivity extends Activity {
                     // ========
                     // Make progress indicator visible
                     setProgressBarIndeterminateVisibility(true);
-                    new LoginTask().execute(apiUrl + "users/sign_in");
+                    new LoginTask().execute(loginUrl);
                     setProgressBarIndeterminateVisibility(false);
-                    /*
-                    //Login in the background using parse
-                    ParseUser.logInInBackground(email, password, new LogInCallback() {
-                        @Override
-                        public void done(ParseUser parseUser, ParseException e) {
-                            //Hide progress indicator
-                            setProgressBarIndeterminateVisibility(false);
-
-                            if (e == null) {
-                                //Login was successful
-                                // The new user was successfully created
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(intent);
-                            } else {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                                builder.setMessage(e.getMessage());
-                                builder.setTitle(R.string.login_error_title);
-                                builder.setPositiveButton(android.R.string.ok, null);
-
-                                AlertDialog dialog = builder.create();
-                                dialog.show();
-                            }
-                        }
-                    });
-                    */
 
                 }
             }
@@ -125,12 +98,13 @@ public class LoginActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
+                //Pass the apiUrl to the intent, so it can be accessed from the Signup Activity.
+                intent.putExtra("apiUrl", getIntent().getStringExtra("apiUrl"));
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             }
         });
-
-
-
 
     }
 
@@ -204,7 +178,14 @@ public class LoginActivity extends Activity {
             Log.v(TAG, result);
             // Convert the response to a JSON object
             try {
-                JSONObject jsonObject = new JSONObject(result);
+                // Set the Json object to initial values just in case
+                // something goes wrong.
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("success", false);
+                jsonObject.put("info", "Something went wrong, Retry!");
+
+                // Make the jsonObject a new Json object of the results.
+                jsonObject = new JSONObject(result);
                 if (jsonObject.has("success")) {
                     // Check if the response is successful
                     if (jsonObject.getBoolean("success")) {
