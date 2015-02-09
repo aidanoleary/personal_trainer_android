@@ -34,6 +34,13 @@ public class User {
         this.gender = gender;
     }
 
+    public User(String email, int age, String gender, Routine routine) {
+        this.email = email;
+        this.age = age;
+        this.gender = gender;
+        this.routine = routine;
+    }
+
     // setters
     public void setId(int id) {
         this.id = id;
@@ -74,6 +81,10 @@ public class User {
     // getters
     public long getId() {
         return this.id;
+    }
+
+    public int getRoutineId() {
+        return routine.getId();
     }
 
     public String getEmail() {

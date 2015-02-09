@@ -85,6 +85,9 @@ public class LoginActivity extends Activity {
                     // ========
                     // Make progress indicator visible
                     setProgressBarIndeterminateVisibility(true);
+                    //Disable the loggin button
+                    mLoginButton.setText("Logging in...");
+                    mLoginButton.setClickable(false);
                     new LoginTask().execute(loginUrl);
                     setProgressBarIndeterminateVisibility(false);
 
@@ -197,6 +200,8 @@ public class LoginActivity extends Activity {
                         editor.putString("AuthToken", jsonObject.getJSONObject("data").getString("auth_token"));
                         editor.commit();
 
+
+
                         // Launch the main activity
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);
@@ -205,14 +210,20 @@ public class LoginActivity extends Activity {
                     }
                     else {
                         Toast.makeText(LoginActivity.this, jsonObject.getString("info"), Toast.LENGTH_LONG).show();
+                        mLoginButton.setText("Login");
+                        mLoginButton.setClickable(true);
                     }
                 }
                 else {
                     Toast.makeText(LoginActivity.this, jsonObject.getString("error"), Toast.LENGTH_LONG).show();
+                    mLoginButton.setText("Login");
+                    mLoginButton.setClickable(true);
                 }
             } catch (Exception e) {
                 // Show a toast displaying what went wrong
                 Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                mLoginButton.setText("Login");
+                mLoginButton.setClickable(true);
             } finally {
                 super.onPostExecute(result);
             }

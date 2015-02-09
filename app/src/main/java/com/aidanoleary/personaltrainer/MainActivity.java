@@ -47,12 +47,13 @@ public class MainActivity extends Activity
     DBAdapter db;
 
     // A static variable that contains the web address the web service is located on.
-    private static String API_URL = "https://cryptic-island-3034.herokuapp.com/";
+    private static String API_URL = "https://personal-trainer-api.herokuapp.com/";
 
     // A shared preferences variable used to store the users email and auth token
     private SharedPreferences mPreferences;
 
     // A object to store details for the current user
+    // This will be the main data structure that will be passed around the application.
     private User currentUser;
 
     @Override
@@ -72,22 +73,30 @@ public class MainActivity extends Activity
         // Close the navigation drawer when the main activity is first accessed.
         mNavigationDrawerFragment.closeDrawer();
 
+
+
         // =====================
         // SQLite Database tasks
         // ======================
         // Check if the database exists and create it if it doesn't
         createDB();
+        Log.v(TAG, "database created");
 
         // Initialise DBAdapter to communicate with the pre configured database
         db = new DBAdapter(this);
+        Log.v(TAG, "DBAdapter initialised.");
 
         // Test the database connection
         try {
             db.open();
-        } catch (SQLException e) {
+            Log.v(TAG, "Database opened.");
+            db.close();
+            Log.v(TAG, "Database closed.");
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        db.close();
+
+
         // =======================
 
 
@@ -99,19 +108,38 @@ public class MainActivity extends Activity
         mPreferences = getSharedPreferences("CurrentUser", MODE_PRIVATE);
 
         // Check if the user is logged in by checking shared preferences for a authorization token
-        if(mPreferences.contains("AuthToken")) {
-            // User is logged in.
-            Log.v(TAG, "Contains AUTH TOKEN");
-
-            // Create the currentUser object
-            // =============================
-            currentUser = new User();
-            // Get the user's email from shared preferences
-            currentUser.setEmail(mPreferences.getString("Email", ""));
-            Log.v(TAG, "currentUser is: " + currentUser.getEmail());
+        if(!mPreferences.contains("AuthToken")) {
+            // User isn't logged in so go to the login screen
+            navigateToLogin();
         }
         else {
-            navigateToLogin();
+            // User is logged in.
+            // Do the things for this activity :-)
+            Log.v(TAG, "Contains AUTH TOKEN");
+            String userEmail = mPreferences.getString("Email", "");
+            String userAuthToken = mPreferences.getString("AuthToken", "");
+
+
+
+            try {
+                db.open();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            if(!db.isDataInDb("user", "email", userEmail)) {
+                db.close();
+                // User doesn't exist so create the user in the database
+                // ===================
+
+
+
+
+            }
+            // If the user exists create objects for their information
+            else {
+
+            }
+
         }
 
     }
@@ -183,6 +211,7 @@ public class MainActivity extends Activity
     }
 
 
+    // This changes the action bar at the top of the page
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
@@ -314,5 +343,22 @@ public class MainActivity extends Activity
             }
         }
     }
+
+    // Create a default workout for the user
+    public void createDefaultWorkout() {
+
+    }
+
+
+    // A helper method for accessing the currentUser object from fragments
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    // A helper method for setting the currentUser object from fragments
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
+    }
+
 
 }
