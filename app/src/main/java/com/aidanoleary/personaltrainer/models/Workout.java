@@ -88,4 +88,7 @@ public class Workout {
         return exercises.get(index);
     }
 
+    public String getDay() {
+        return day;
+    }
 }

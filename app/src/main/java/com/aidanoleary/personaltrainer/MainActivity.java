@@ -24,7 +24,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.sql.SQLException;
 
 
 public class MainActivity extends Activity
@@ -113,6 +112,7 @@ public class MainActivity extends Activity
             navigateToLogin();
         }
         else {
+            /*
             // User is logged in.
             // Do the things for this activity :-)
             Log.v(TAG, "Contains AUTH TOKEN");
@@ -139,6 +139,7 @@ public class MainActivity extends Activity
             else {
 
             }
+            */
 
         }
 
@@ -218,7 +219,7 @@ public class MainActivity extends Activity
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
-            getMenuInflater().inflate(R.menu.main, menu);
+            getMenuInflater().inflate(R.menu.navigation, menu);
             restoreActionBar();
             return true;
         }
@@ -230,7 +231,9 @@ public class MainActivity extends Activity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
+        /*
         if (id == R.id.action_settings) {
             return true;
         }
@@ -246,7 +249,9 @@ public class MainActivity extends Activity
             navigateToLogin();
             return true;
         }
+        */
         return super.onOptionsItemSelected(item);
+
     }
 
     /**
@@ -293,7 +298,7 @@ public class MainActivity extends Activity
     // ===================
 
     // A method for navigating to the log in screen.
-    private void navigateToLogin() {
+    public void navigateToLogin() {
         Intent intent = new Intent(this, LoginActivity.class);
         //Pass the api url to the intent.
         intent.putExtra("apiUrl", API_URL);
@@ -349,6 +354,9 @@ public class MainActivity extends Activity
 
     }
 
+
+    // Methods for passing and accessing the main data structure from fragments.
+    // ==============================
 
     // A helper method for accessing the currentUser object from fragments
     public User getCurrentUser() {

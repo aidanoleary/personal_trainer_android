@@ -15,6 +15,7 @@ public class User {
     private int fitnessLevel;
     private String authorizationToken;
     private Routine routine;
+    private int points;
 
     // constructors
     public User() {
@@ -39,6 +40,14 @@ public class User {
         this.age = age;
         this.gender = gender;
         this.routine = routine;
+    }
+
+    public User(String email, int age, String gender, Routine routine, int points) {
+        this.email = email;
+        this.age = age;
+        this.gender = gender;
+        this.routine = routine;
+        this.points = points;
     }
 
     // setters
@@ -76,6 +85,10 @@ public class User {
 
     public void setRoutine(Routine routine) {
         this.routine = routine;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
     }
 
     // getters
@@ -119,5 +132,9 @@ public class User {
 
     public double getBmi() {
         return bmi;
+    }
+
+    public int getPoints() {
+        return points;
     }
 }
