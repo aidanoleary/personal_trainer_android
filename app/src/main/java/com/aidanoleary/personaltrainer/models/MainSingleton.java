@@ -61,6 +61,9 @@ public class MainSingleton {
         return sMainSingleton;
     }
 
+    public static void Destroy() {
+        sMainSingleton = null;
+    }
 
     // ---- getters -----
 

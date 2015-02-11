@@ -21,6 +21,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.aidanoleary.personaltrainer.models.MainSingleton;
+
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
@@ -252,16 +254,16 @@ public class MainDrawerFragment extends Fragment {
 
         if (item.getItemId() == R.id.action_logout) {
             // Delete the shared preferences values for the local user.
-
-            SharedPreferences preferences = getActivity().getSharedPreferences("CurrentUser", getActivity().MODE_PRIVATE);
+            SharedPreferences preferences = getActivity().getApplicationContext().getSharedPreferences("CurrentUser", getActivity().MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
             editor.remove("Email");
             editor.remove("AuthToken");
             editor.commit();
+            MainSingleton.Destroy();
 
             // Navigate back to the login screen by using the main activities navigate to login
             // method.
-            ((MainActivity)getActivity()).navigateToLogin();
+            ((MainActivity) getActivity()).navigateToLogin();
             return true;
         }
 

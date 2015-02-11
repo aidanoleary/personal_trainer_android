@@ -104,7 +104,7 @@ public class MainActivity extends Activity
         // =======================
 
         // Get shared preferences for the current user
-        mPreferences = getSharedPreferences("CurrentUser", MODE_PRIVATE);
+        mPreferences = getApplicationContext().getSharedPreferences("CurrentUser", MODE_PRIVATE);
 
         // Check if the user is logged in by checking shared preferences for a authorization token
         if(!mPreferences.contains("AuthToken")) {
