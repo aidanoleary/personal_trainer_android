@@ -29,6 +29,10 @@
             android:name=".GenerateRoutineActivity"
             android:label="@string/title_activity_generate_routine" >
         </activity>
+        <activity
+            android:name=".WorkoutExerciseListActivity"
+            android:label="@string/title_activity_workout_exercise_list" >
+        </activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

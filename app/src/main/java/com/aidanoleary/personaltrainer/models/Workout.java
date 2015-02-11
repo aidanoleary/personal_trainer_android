@@ -88,6 +88,10 @@ public class Workout {
         return exercises.get(index);
     }
 
+    public ArrayList<Exercise> getExerciseList() {
+        return exercises;
+    }
+
     public String getDay() {
         return day;
     }

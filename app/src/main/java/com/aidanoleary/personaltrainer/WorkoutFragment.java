@@ -1,7 +1,7 @@
 package com.aidanoleary.personaltrainer;
 
 import android.app.Fragment;
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -12,13 +12,10 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.aidanoleary.personaltrainer.models.Exercise;
-import com.aidanoleary.personaltrainer.models.Routine;
+import com.aidanoleary.personaltrainer.models.MainSingleton;
 import com.aidanoleary.personaltrainer.models.User;
-import com.aidanoleary.personaltrainer.models.Workout;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -34,49 +31,11 @@ public class WorkoutFragment extends Fragment {
     private String[] workoutNames;
     private String[] workoutDays;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_workout, container, false);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-        // Due to this being the initial fragment that is loaded, it also has to set the parent activities initial
-        // current user variable. If I try to do this from the main activity the program crashes, because I try to access it
-        // from the fragment before the activity has created it.
-        // =======================================================
-
-        // TODO perform a check to see if the user already has a workout in the database
-
-        // This will run when the application is first run and the current user still needs to be initialised.
-        if(((MainActivity)getActivity()).getCurrentUser() == null) {
-            // ===== testing purposes ======
-            SharedPreferences preferences = getActivity().getSharedPreferences("CurrentUser", getActivity().MODE_PRIVATE);
-            String userEmail = preferences.getString("Email", "");
-            String userAuthToken = preferences.getString("AuthToken", "");
-
-            // Create 6 exercises
-            ArrayList<Exercise> exercises = new ArrayList<Exercise>();
-            for (int i = 0; i < 6; i++) {
-                exercises.add(new Exercise("test exercise " + i));
-            }
-
-            // Create 3 workouts and exercises to them
-            ArrayList<Workout> workouts = new ArrayList<Workout>();
-            for (int i = 0; i < 6; i++) {
-                workouts.add(new Workout("test workout " + i, "test description " + i, "day " + i));
-                workouts.get(i).addExerciseList(exercises);
-            }
-
-
-            // create a routine and add workouts to it
-            Routine routine = new Routine("Workout routine 1", "This is the description of the routine", workouts);
-            currentUser = new User(userEmail, 22, "male", routine, 100);
-            ((MainActivity) getActivity()).setCurrentUser(currentUser);
-
-            // Change this to use the data in the sqlite database
-
-        }
-
-        // Get the Current User from the main activity
-        currentUser = ((MainActivity) getActivity()).getCurrentUser();
+        // Get the Current User object from the MainSingleton
+        currentUser = MainSingleton.get(getActivity()).getUser();
 
         // Load the details for the current workout
         int numOfWorkouts = currentUser.getRoutine().getWorkouts().size();
@@ -87,6 +46,13 @@ public class WorkoutFragment extends Fragment {
             workoutNames[i] = currentUser.getRoutine().getWorkouts().get(i).getName();
             workoutDays[i] = currentUser.getRoutine().getWorkouts().get(i).getDay();
         }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.fragment_workout, container, false);
+
+
 
         // Update the items in the view
         // ===============
@@ -106,10 +72,14 @@ public class WorkoutFragment extends Fragment {
         // Also set the click listener on the items.
         ListView workoutList = (ListView) rootView.findViewById(R.id.listView);
         workoutList.setAdapter(new WorkoutArrayAdapter(getActivity(), workoutNames, workoutDays));
+        final Intent intent = new Intent(getActivity(), WorkoutExerciseListActivity.class);
+
         workoutList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.v("WorkoutFragment", workoutNames[position] + " was pressed!");
+                intent.putExtra("workoutNumber", position);
+                startActivity(intent);
             }
         });
 

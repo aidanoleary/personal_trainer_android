@@ -42,8 +42,9 @@ public class User {
         this.routine = routine;
     }
 
-    public User(String email, int age, String gender, Routine routine, int points) {
+    public User(String email, String authorizationToken, int age, String gender, Routine routine, int points) {
         this.email = email;
+        this.authorizationToken = authorizationToken;
         this.age = age;
         this.gender = gender;
         this.routine = routine;
