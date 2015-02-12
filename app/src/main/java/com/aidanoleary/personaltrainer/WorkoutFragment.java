@@ -34,8 +34,18 @@ public class WorkoutFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.fragment_workout, container, false);
+
         // Get the Current User object from the MainSingleton
         currentUser = MainSingleton.get(getActivity()).getUser();
+
+        // Set the current Users email address
+        // TODO remove this when I find out why it doesn't display the users email when they first run the app and login.
+        currentUser.setEmail(getActivity().getSharedPreferences("CurrentUser", getActivity().MODE_PRIVATE).getString("Email", ""));
 
         // Load the details for the current workout
         int numOfWorkouts = currentUser.getRoutine().getWorkouts().size();
@@ -46,12 +56,6 @@ public class WorkoutFragment extends Fragment {
             workoutNames[i] = currentUser.getRoutine().getWorkouts().get(i).getName();
             workoutDays[i] = currentUser.getRoutine().getWorkouts().get(i).getDay();
         }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_workout, container, false);
-
 
 
         // Update the items in the view

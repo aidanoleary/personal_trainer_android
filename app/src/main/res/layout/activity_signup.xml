@@ -32,14 +32,15 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPassword"
             android:ems="10"
             android:id="@+id/signupPasswordField"
             android:layout_gravity="center_horizontal"
-            android:text="@string/password_field_hint"
             android:background="#CCCCCC"
             android:layout_marginTop="20dp"
-            android:padding="5dp" />
+            android:padding="5dp"
+            android:password="false"
+            android:hint="Password"
+            android:inputType="textPassword" />
 
         <EditText
             android:layout_width="match_parent"
@@ -48,10 +49,11 @@
             android:ems="10"
             android:id="@+id/signupPasswordConfirmationField"
             android:layout_gravity="center_horizontal"
-            android:text="@string/password_field_hint"
             android:background="#CCCCCC"
             android:layout_marginTop="20dp"
-            android:padding="5dp" />
+            android:padding="5dp"
+            android:singleLine="false"
+            android:hint="Confirm Password" />
 
         <Button
             android:layout_width="match_parent"
@@ -66,7 +68,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Already have an account? Login here"
             android:id="@+id/signupLoginText"
             android:layout_gravity="center_horizontal"
