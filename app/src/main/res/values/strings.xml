@@ -27,5 +27,6 @@
     <string name="signup_error_password_match">Your password doesn\'t match confirmation, check again</string>
     <string name="title_activity_workout_exercise_list">WorkoutExerciseListActivity</string>
     <string name="exercise_list_start">Start</string>
+    <string name="title_activity_exercise">ExerciseActivity</string>
 
 </resources>

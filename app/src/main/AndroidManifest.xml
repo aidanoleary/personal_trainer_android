@@ -33,6 +33,10 @@
             android:name=".WorkoutExerciseListActivity"
             android:label="@string/title_activity_workout_exercise_list" >
         </activity>
+        <activity
+            android:name=".ExerciseActivity"
+            android:label="@string/title_activity_exercise" >
+        </activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

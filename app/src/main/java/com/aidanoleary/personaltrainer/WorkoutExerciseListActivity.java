@@ -1,6 +1,7 @@
 package com.aidanoleary.personaltrainer;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -64,10 +65,15 @@ public class WorkoutExerciseListActivity extends Activity {
 
         ListView exerciseList = (ListView) findViewById(R.id.listView);
         exerciseList.setAdapter(new WorkoutExerciseArrayAdapter(this, exerciseNames, exerciseSetsList, exerciseRepsList));
+        final Intent intent = new Intent(this, ExerciseActivity.class);
+
         exerciseList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.v(TAG, exerciseNames[position] + " was clicked!");
+                intent.putExtra("workoutNumber", numOfWorkout);
+                intent.putExtra("exerciseNumber", position);
+                startActivity(intent);
             }
         });
         //exerciseList.setAdapter(new WorkoutExerciseArrayAdapter(this, workout.get));
