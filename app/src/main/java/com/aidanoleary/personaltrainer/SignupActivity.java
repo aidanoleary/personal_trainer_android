@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +57,10 @@ public class SignupActivity extends Activity {
         mPasswordConfirmationText = (EditText) findViewById(R.id.signupPasswordConfirmationField);
         mSignupButton = (Button) findViewById(R.id.signupButton);
         mLoginText = (TextView) findViewById(R.id.signupLoginText);
+
+        // Set the signup screen logo
+        ImageView exerciseImage = (ImageView) findViewById(R.id.signupLogoImage);
+        exerciseImage.setImageResource(R.drawable.placeholder_image);
 
         //Add an onclick listener for the signup button
         mSignupButton.setOnClickListener(new View.OnClickListener() {

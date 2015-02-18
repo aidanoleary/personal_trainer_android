@@ -10,9 +10,12 @@ import android.util.Log;
 import com.aidanoleary.personaltrainer.models.Exercise;
 import com.aidanoleary.personaltrainer.models.Routine;
 import com.aidanoleary.personaltrainer.models.User;
+import com.aidanoleary.personaltrainer.models.UserWorkout;
+import com.aidanoleary.personaltrainer.models.UserWorkoutExercise;
 import com.aidanoleary.personaltrainer.models.Workout;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 
 /**
  * Created by aidanoleary on 14/01/2015.
@@ -154,10 +157,10 @@ public class DBAdapter {
 
     // Insert a workout_exercise
     // ==========
-    public long insertWorkoutExercise(Workout workout, Exercise exercise) {
+    public long insertWorkoutExercise(int workoutId, int exerciseId) {
         ContentValues initialValues = new ContentValues();
-        initialValues.put("workout_id", workout.getId());
-        initialValues.put("exercise_id", exercise.getId());
+        initialValues.put("workout_id", workoutId);
+        initialValues.put("exercise_id", exerciseId);
         return db.insert("workout_exercise", null, initialValues);
     }
 
@@ -177,6 +180,78 @@ public class DBAdapter {
         return db.insert("exercise", null, initialValues);
     }
 
+    // Insert a user_workout
+    // ==================
+
+    // Maybe change this to use the method without an object
+    /*
+    public long insertUserWorkout(int userId, int workoutId, double timeTaken) {
+        ContentValues initialValues = new ContentValues();
+        initialValues.put("user_id", userId);
+        initialValues.put("workout_id", workoutId);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date();
+        initialValues.put("workout_date", dateFormat.format(date));
+        initialValues.put("time_taken", timeTaken);
+        return db.insert("user_workout", null, initialValues);
+    }
+    */
+
+    public long insertUserWorkout(UserWorkout userWorkout) {
+        ContentValues initialValues = new ContentValues();
+        initialValues.put("user_id", userWorkout.getUserId());
+        initialValues.put("workout_id", userWorkout.getWorkoutId());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        initialValues.put("workout_date", dateFormat.format(userWorkout.getWorkoutDate()));
+        initialValues.put("time_taken", userWorkout.getTimeTaken());
+        return db.insert("user_workout", null, initialValues);
+    }
+
+
+    // Insert a user_workout_exercise
+    // ==================
+    /*
+    public long insertUserWorkoutExercise(int userWorkoutId, int exerciseId, int numberOfReps, int numberOfSets, double weight) {
+        ContentValues initialValues = new ContentValues();
+        initialValues.put("user_workout_id", userWorkoutId);
+        initialValues.put("exercise_id", exerciseId);
+        initialValues.put("number_of_reps", numberOfReps);
+        initialValues.put("number_of_sets", numberOfSets);
+        initialValues.put("weight", weight);
+        return db.insert("user_workout", null, initialValues);
+    }
+    */
+
+    public long insertUserWorkoutExercise(UserWorkoutExercise userWorkoutExercise) {
+        ContentValues initialValues = new ContentValues();
+        initialValues.put("user_workout_id", userWorkoutExercise.getUserWorkoutId());
+        initialValues.put("exercise_id", userWorkoutExercise.getExerciseId());
+        initialValues.put("number_of_reps", userWorkoutExercise.getNumberOfReps());
+        initialValues.put("number_of_sets", userWorkoutExercise.getNumberOfSets());
+        initialValues.put("weight", userWorkoutExercise.getWeight());
+        return db.insert("user_workout", null, initialValues);
+    }
+
+
+    /*
+    // Retrieving items from the database
+    // ==================================
+    public User getUser(String userEmail) {
+
+        String selectQuery = "SELECT * FROM user WHERE email = '" + userEmail + "'";
+        Log.v("DBAdapter", selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if(c != null)
+            c.moveToFirst();
+
+        User user = new User();
+        user.setEmail(c.getString(c.getColumnIndex("email")));
+        // continue here using this tutorial http://www.androidhive.info/2013/09/android-sqlite-database-with-multiple-tables/
+
+    }
+    */
 
 
 
