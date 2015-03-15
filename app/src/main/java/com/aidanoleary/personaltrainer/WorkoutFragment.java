@@ -2,6 +2,8 @@ package com.aidanoleary.personaltrainer;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -12,9 +14,24 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.aidanoleary.personaltrainer.helpers.DBAdapter;
+import com.aidanoleary.personaltrainer.models.Exercise;
 import com.aidanoleary.personaltrainer.models.MainSingleton;
 import com.aidanoleary.personaltrainer.models.User;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -27,6 +44,7 @@ public class WorkoutFragment extends Fragment {
     View rootView;
 
     private User currentUser;
+    private DBAdapter db;
 
     private String[] workoutNames;
     private String[] workoutDays;
@@ -39,6 +57,10 @@ public class WorkoutFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_workout, container, false);
+
+
+        // Check if the exercises have been added if not download them and add them from the server
+        addExercisesIfEmpty();
 
         // Get the Current User object from the MainSingleton
         currentUser = MainSingleton.get(getActivity()).getUser();
@@ -89,5 +111,143 @@ public class WorkoutFragment extends Fragment {
 
         //setListAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, days));
         return rootView;
+    }
+
+    // A method that checks if the exercises have been added to the sqlite database and if they haven't add them.
+    private void addExercisesIfEmpty() {
+        // ==================
+        // Run this the first time the app is run
+        // ===============
+
+        // Check if exercises have been added
+        // if they haven't run a async task to get the exercises from the server and load them into the database
+        db = new DBAdapter(getActivity());
+        Boolean isExercisesEmpty = true;
+        try {
+            db.open();
+            isExercisesEmpty = db.isTableEmpty("exercise");
+            Log.v(TAG, "is exercise table empty: " + isExercisesEmpty);
+            db.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        // If the exercise table is empty use async task to populate it with exercises from the
+        // webserver
+        if(isExercisesEmpty) {
+            // run async task to add exercises.
+            // Create the url with the users email and auth token.
+            SharedPreferences preferences = getActivity().getSharedPreferences("CurrentUser", getActivity().MODE_PRIVATE);
+            String userEmail = preferences.getString("Email", "");
+            String userToken = preferences.getString("AuthToken", "");
+
+            String exercisesUrl = ((MainActivity)getActivity()).getAPI_URL() + "exercises.json?user_email=" + userEmail + "&user_token=" + userToken;
+            new GetExercisesTask().execute(exercisesUrl);
+            // TODO CONTINUE HERE 000000000000000000000
+        }
+
+
+        // ===============
+    }
+
+    // A inner class to retrieve exercises from the personal trainer api
+    // and upload them to local sqlite database
+    private class GetExercisesTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... urls) {
+            StringBuilder stringBuilder = new StringBuilder();
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpGet httpGet = new HttpGet(urls[0]);
+
+            // Set the headers
+            httpGet.setHeader("Accept", "application/json");
+            httpGet.setHeader("Content-Type", "application/json");
+
+
+            try {
+                // Execute the Get request to the server and get a response
+                HttpResponse response = httpClient.execute(httpGet);
+                InputStream inputStream = response.getEntity().getContent();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                String line;
+
+                // Loop through the content of the response appending lines to the string builder
+                while ((line = reader.readLine()) != null) {
+                    stringBuilder.append(line);
+                }
+                inputStream.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return stringBuilder.toString();
+
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            // Log.v(TAG, result);
+            // TODO CONTINUE HERE 00000000000000000
+            try {
+                //Create a JSON array of the retrieved results
+                JSONArray exercisesArray = new JSONArray(result);
+
+                // Print the contents of the JSON feed
+                Log.v(TAG, "The exercises array has " + exercisesArray.length() + " items.");
+
+
+                //Add the exercises to the local sqlite database
+                // ===============
+
+                //Create a placeholder exercise to use in the loop.
+                Exercise currentExercise = new Exercise();
+                JSONObject currentJsonExercise = new JSONObject();
+
+
+                try {
+                    //Open the connection to the database
+                    db.open();
+
+                    // Loop over the JSON array adding the exercises to the sqlite database
+                    for (int i = 0; i < exercisesArray.length(); i++) {
+
+                        //Get the current JSON exercise
+                        currentJsonExercise = exercisesArray.getJSONObject(i);
+
+                        //Create the current exercise object
+                        currentExercise.setId(currentJsonExercise.getInt("id"));
+                        currentExercise.setName(currentJsonExercise.getString("name"));
+                        currentExercise.setDescription(currentJsonExercise.getString("description"));
+                        currentExercise.setLevel(currentJsonExercise.getString("level"));
+                        currentExercise.setMainMuscle(currentJsonExercise.getString("main_muscle"));
+                        currentExercise.setOtherMuscles(currentJsonExercise.getString("other_muscles"));
+                        currentExercise.setEquipment(currentJsonExercise.getString("equipment"));
+                        currentExercise.setType(currentJsonExercise.getString("e_type"));
+                        currentExercise.setMechanics(currentJsonExercise.getString("mechanics"));
+                        currentExercise.setImageUrl(currentJsonExercise.getString("image_url"));
+
+                        // Add the exercise to sqlite database
+                        db.insertExerciseWithId(currentExercise);
+                    }
+
+                    // Check if one of the entries exists in the database
+                    Log.v(TAG, "Is Barbell Squat in the database: " + db.isDataInDb("exercise", "name", "'Barbell Squat'"));
+                    Log.v(TAG, "Is Exercise with ID 1275 in the datbase: " + db.isDataInDb("exercise", "id", "1281"));
+
+                    // Close the connection to the database
+                    db.close();
+
+                    //TODO check this works1
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

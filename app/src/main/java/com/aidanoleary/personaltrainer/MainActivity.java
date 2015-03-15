@@ -363,6 +363,11 @@ public class MainActivity extends Activity
         return currentUser;
     }
 
+    // Get the API url from fragments
+    public String getAPI_URL() {
+        return API_URL;
+    }
+
     // A helper method for setting the currentUser object from fragments
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;

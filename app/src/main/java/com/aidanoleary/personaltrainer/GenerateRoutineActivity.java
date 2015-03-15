@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 
@@ -27,7 +28,8 @@ public class GenerateRoutineActivity extends Activity {
     // ======================================
 
     // Workout variables
-    private String goal;
+    // An integer variable to represent the users goal
+    private int goal;
     private String[] workoutDays;
     private int numberOfExercises;
     private int numberOfReps;
@@ -66,8 +68,17 @@ public class GenerateRoutineActivity extends Activity {
             public void onClick(View v) {
                 switch (currentQuestionNumber) {
                     case 1:
+                        // *********
+                        // What is your goal?
+                        // ***********
+
                         // Perform actions for selection
                         // =============================
+
+                        // Get current selection and update goal field
+                        RadioGroup goalGroup = (RadioGroup) findViewById(R.id.generateGoalGroup);
+
+
 
 
                         // =============================

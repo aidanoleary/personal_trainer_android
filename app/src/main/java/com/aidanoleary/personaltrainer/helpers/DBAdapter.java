@@ -113,12 +113,29 @@ public class DBAdapter {
     // Check if a record exists in the database
     // ===========
     public boolean isDataInDb(String tableName, String dbfield, String fieldValue) {
-        String dbQuery = "SELECT * FROM " + tableName + " WHERE " + dbfield + " = '" + fieldValue + "'";
+        String dbQuery = "SELECT * FROM " + tableName + " WHERE " + dbfield + " = " + fieldValue;
         Cursor cursor = db.rawQuery(dbQuery, null);
         if(cursor.getCount() <= 0) {
             return false;
         }
         return true;
+    }
+
+    // Check if a table is empty
+    // Returns true if the table is empty
+    // ==========
+    public boolean isTableEmpty(String tableName) {
+        String query = "SELECT count(*) FROM " + tableName;
+        Cursor mcursor = db.rawQuery(query, null);
+        mcursor.moveToFirst();
+        if(mcursor.getInt(0) > 0) {
+            // table is populated return false
+            return false;
+        }
+        else {
+            // return true if the table is empty.
+            return true;
+        }
     }
 
     // Inserting items into the database
@@ -168,6 +185,21 @@ public class DBAdapter {
     // ==========
     public long insertExercise(Exercise exercise) {
         ContentValues initialValues = new ContentValues();
+        initialValues.put("name", exercise.getName());
+        initialValues.put("description", exercise.getDescription());
+        initialValues.put("level", exercise.getLevel());
+        initialValues.put("main_muscle", exercise.getMainMuscle());
+        initialValues.put("other_muscles", exercise.getOtherMuscles());
+        initialValues.put("equipment", exercise.getEquipment());
+        initialValues.put("type", exercise.getType());
+        initialValues.put("mechanics", exercise.getMechanics());
+        initialValues.put("image_url", exercise.getImageUrl());
+        return db.insert("exercise", null, initialValues);
+    }
+
+    public long insertExerciseWithId(Exercise exercise) {
+        ContentValues initialValues = new ContentValues();
+        initialValues.put("id", exercise.getId());
         initialValues.put("name", exercise.getName());
         initialValues.put("description", exercise.getDescription());
         initialValues.put("level", exercise.getLevel());

@@ -14,11 +14,21 @@
     <string name="login_error_message">Email and Password can\'t be empty</string>
     <string name="login_error_title">Login Error</string>
     <string name="title_activity_navigation">Personal Trainer</string>
+
+    <string-array name="sections">
+        <item>Section1</item>
+        <item>Section1</item>
+        <item>Section1</item>
+        <item>Section1</item>
+        <item>Section1</item>
+    </string-array>
+
     <string name="title_section1">Workout</string>
     <string name="title_section2">Profile</string>
     <string name="title_section3">Achievements</string>
     <string name="title_section4">Logs</string>
     <string name="title_section5">Settings</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
