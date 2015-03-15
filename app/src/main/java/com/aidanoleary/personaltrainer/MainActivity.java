@@ -185,6 +185,15 @@ public class MainActivity extends Activity
 
     // used to change the navbar title when a new fragment is attached
     public void onSectionAttached(int number) {
+        String[] stringArray = getResources().getStringArray(R.array.section_titles);
+        if (number >= 1) {
+            mTitle = stringArray[number - 1];
+        }
+    }
+
+    //old
+    /*
+    public void onSectionAttached(int number) {
         switch (number) {
             case 1:
                 mTitle = getString(R.string.title_section1);
@@ -203,6 +212,7 @@ public class MainActivity extends Activity
                 break;
         }
     }
+    */
 
     public void restoreActionBar() {
         ActionBar actionBar = getActionBar();

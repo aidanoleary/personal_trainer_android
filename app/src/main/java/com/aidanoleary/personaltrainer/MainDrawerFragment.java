@@ -6,6 +6,8 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -20,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.aidanoleary.personaltrainer.models.MainSingleton;
 
@@ -100,6 +103,25 @@ public class MainDrawerFragment extends Fragment {
         });
 
         //This is where new items can be added to the navigation drawer menu
+        final TypedArray typedArray = getResources().obtainTypedArray(R.array.sections_icons);
+        mDrawerListView.setAdapter(new ArrayAdapter<String>(
+                getActionBar().getThemedContext(),
+                android.R.layout.simple_list_item_activated_1,
+                android.R.id.text1,
+                getResources().getStringArray(R.array.sections)
+        ) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View v = super.getView(position, convertView, parent);
+                int resourceId = typedArray.getResourceId(position, 0);
+                Drawable drawable = getResources().getDrawable(resourceId);
+                ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+                return v;
+            }
+        });
+
+        //old
+        /*
         mDrawerListView.setAdapter(new ArrayAdapter<String>(
                 getActionBar().getThemedContext(),
                 android.R.layout.simple_list_item_activated_1,
@@ -111,6 +133,7 @@ public class MainDrawerFragment extends Fragment {
                         getString(R.string.title_section4),
                         getString(R.string.title_section5)
                 }));
+        */
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;
     }

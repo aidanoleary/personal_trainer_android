@@ -16,18 +16,26 @@
     <string name="title_activity_navigation">Personal Trainer</string>
 
     <string-array name="sections">
-        <item>Section1</item>
-        <item>Section1</item>
-        <item>Section1</item>
-        <item>Section1</item>
-        <item>Section1</item>
+        <item>Workout</item>
+        <item>Profile</item>
+        <item>Achievement</item>
+        <item>Logs</item>
+        <item>Settings</item>
     </string-array>
-
-    <string name="title_section1">Workout</string>
-    <string name="title_section2">Profile</string>
-    <string name="title_section3">Achievements</string>
-    <string name="title_section4">Logs</string>
-    <string name="title_section5">Settings</string>
+    <string-array name="section_titles">
+        <item>Workout</item>
+        <item>Profile</item>
+        <item>Achievements</item>
+        <item>Logs</item>
+        <item>Settings</item>
+    </string-array>
+    <string-array name="sections_icons">
+        <item>@drawable/ic_profile</item>
+        <item>@drawable/ic_profile</item>
+        <item>@drawable/ic_profile</item>
+        <item>@drawable/ic_profile</item>
+        <item>@drawable/ic_profile</item>
+    </string-array>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
