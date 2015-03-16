@@ -18,7 +18,7 @@
     <string-array name="sections">
         <item>Workout</item>
         <item>Profile</item>
-        <item>Achievement</item>
+        <item>Achievements</item>
         <item>Logs</item>
         <item>Settings</item>
     </string-array>
@@ -30,10 +30,10 @@
         <item>Settings</item>
     </string-array>
     <string-array name="sections_icons">
+        <item>@drawable/ic_workout</item>
         <item>@drawable/ic_profile</item>
-        <item>@drawable/ic_profile</item>
-        <item>@drawable/ic_profile</item>
-        <item>@drawable/ic_profile</item>
+        <item>@drawable/ic_achievements</item>
+        <item>@drawable/ic_logs</item>
         <item>@drawable/ic_profile</item>
     </string-array>
 

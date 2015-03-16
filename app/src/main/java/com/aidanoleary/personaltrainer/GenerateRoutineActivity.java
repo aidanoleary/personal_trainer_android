@@ -3,6 +3,7 @@ package com.aidanoleary.personaltrainer;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,8 +13,12 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 
 public class GenerateRoutineActivity extends Activity {
+
+    private static String TAG = GenerateRoutineActivity.class.getSimpleName();
 
     private int currentQuestionNumber;
     private String[] questionList;
@@ -30,7 +35,7 @@ public class GenerateRoutineActivity extends Activity {
     // Workout variables
     // An integer variable to represent the users goal
     private int goal;
-    private String[] workoutDays;
+    private ArrayList<String> workoutDays;
     private int numberOfExercises;
     private int numberOfReps;
     private int numberOfSets;
@@ -58,6 +63,11 @@ public class GenerateRoutineActivity extends Activity {
         questionNumberText = (TextView) findViewById(R.id.generateQuestionNumberText);
         questionNumberText.setText(questionNumberText.getText().toString() + currentQuestionNumber);
 
+        // Initialize variables
+        // =========
+        // initialise workout days to an array of 7 strings.
+        workoutDays = new ArrayList<String>();
+
         // Add the initial sub question layout to the activity
         mainContent.addView(View.inflate(this, R.layout.activity_generate_routine_q1, null));
 
@@ -77,8 +87,8 @@ public class GenerateRoutineActivity extends Activity {
 
                         // Get current selection and update goal field
                         RadioGroup goalGroup = (RadioGroup) findViewById(R.id.generateGoalGroup);
-
-
+                        goal = goalGroup.indexOfChild(findViewById(goalGroup.getCheckedRadioButtonId()));
+                        Log.v(TAG, "Current Goal is " + goal);
 
 
                         // =============================
@@ -89,6 +99,16 @@ public class GenerateRoutineActivity extends Activity {
 
 
                     case 2:
+                        // *********
+                        // What days of the week do you exercises?
+                        // *********
+
+                        // TODO continue here get checkboxes that are selected and update the weekdays array
+
+                        //Loop through the array and clear the items.
+
+                        // Add the selected items to arraylist of weekday strings.
+
                         // Perform actions for selection
                         // =============================
 
@@ -100,6 +120,14 @@ public class GenerateRoutineActivity extends Activity {
                         break;
 
                     case 3:
+                        // *********
+                        // How old are you?
+                        // *********
+                        /*
+                        NumberPicker agePicker = (NumberPicker)findViewById(R.id.numberPicker);
+                        agePicker.setEnabled(true);
+                        */
+
                         // Perform actions for selection
                         // =============================
 
