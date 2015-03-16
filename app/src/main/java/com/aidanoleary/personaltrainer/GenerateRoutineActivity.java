@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -28,6 +29,7 @@ public class GenerateRoutineActivity extends Activity {
     private Button confirmButton;
     private Button backButton;
     private ViewGroup mainContent;
+    private LinearLayout workoutDaysWrapper;
 
     // Variables used to generate the workout
     // ======================================
@@ -65,7 +67,7 @@ public class GenerateRoutineActivity extends Activity {
 
         // Initialize variables
         // =========
-        // initialise workout days to an array of 7 strings.
+        // initialise workout days variables including layout containing checkboxes
         workoutDays = new ArrayList<String>();
 
         // Add the initial sub question layout to the activity
@@ -103,15 +105,26 @@ public class GenerateRoutineActivity extends Activity {
                         // What days of the week do you exercises?
                         // *********
 
-                        // TODO continue here get checkboxes that are selected and update the weekdays array
-
-                        //Loop through the array and clear the items.
-
-                        // Add the selected items to arraylist of weekday strings.
-
                         // Perform actions for selection
                         // =============================
 
+                        //Loop through the array and clear the items.
+                        workoutDays.clear();
+
+                        // Add the selected items to Arraylist of weekday strings.
+                        // Loop through all items in the weekday relative layout
+                        // Checking if checkboxes are selected. If they are add them to the arraylist
+                        // of selected weekdays.
+                        workoutDaysWrapper = (LinearLayout) findViewById(R.id.generateWeekdaysLayout);
+                        CheckBox currentCheckbox;
+
+                        for(int i = 0; i < workoutDaysWrapper.getChildCount(); i++) {
+                            currentCheckbox = (CheckBox) workoutDaysWrapper.getChildAt(i);
+                            if(currentCheckbox.isChecked()) {
+                                workoutDays.add(currentCheckbox.getText().toString());
+                                Log.v(TAG, currentCheckbox.getText().toString() + " has been added to weekdays.");
+                            }
+                        }
 
                         // =============================
 
