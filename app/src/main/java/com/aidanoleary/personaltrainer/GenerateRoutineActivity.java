@@ -10,9 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -29,26 +31,39 @@ public class GenerateRoutineActivity extends Activity {
     private Button confirmButton;
     private Button backButton;
     private ViewGroup mainContent;
+    private RadioGroup goalGroup;
     private LinearLayout workoutDaysWrapper;
+    private EditText ageField;
+    private RadioGroup genderGroup;
+    private EditText heightField;
+    private EditText weightField;
+    private RadioGroup timeGroup;
 
     // Variables used to generate the workout
     // ======================================
 
     // Workout variables
     // An integer variable to represent the users goal
+    // Variables used to store question information until end where workout is generated.
     private int goal;
     private ArrayList<String> workoutDays;
+    private int usersAge;
+    private String usersGender;
+    private double usersHeight;
+    private double usersWeight;
+    private int workoutTime;
+
     private int numberOfExercises;
     private int numberOfReps;
     private int numberOfSets;
+    private int usersBMI;
 
     // user variables
-    private int usersFitnessLevel;
-    private String usersGender;
-    private int usersAge;
-    private int usersHeight;
-    private int usersWeight;
-    private int usersBMI;
+    // private int usersFitnessLevel;
+
+
+
+
 
 
 
@@ -88,7 +103,7 @@ public class GenerateRoutineActivity extends Activity {
                         // =============================
 
                         // Get current selection and update goal field
-                        RadioGroup goalGroup = (RadioGroup) findViewById(R.id.generateGoalGroup);
+                        goalGroup = (RadioGroup) findViewById(R.id.generateGoalGroup);
                         goal = goalGroup.indexOfChild(findViewById(goalGroup.getCheckedRadioButtonId()));
                         Log.v(TAG, "Current Goal is " + goal);
 
@@ -136,23 +151,43 @@ public class GenerateRoutineActivity extends Activity {
                         // *********
                         // How old are you?
                         // *********
-                        /*
-                        NumberPicker agePicker = (NumberPicker)findViewById(R.id.numberPicker);
-                        agePicker.setEnabled(true);
-                        */
 
                         // Perform actions for selection
                         // =============================
+                        ageField = (EditText) findViewById(R.id.generateAgeField);
 
+                        // Check if the user has entered a valid age.
+                        if(ageField.getText().toString().isEmpty()) {
+                            //User has not entered a valid age so display a toast asking them to enter their age.
+                            Toast.makeText(GenerateRoutineActivity.this, "Enter a valid age.", Toast.LENGTH_SHORT).show();
 
-                        // =============================
-                        nextQuestion(R.layout.activity_generate_routine_q4);
+                        }
+                        else {
+                            //User has entered a valid age, so save the age and move to next question.
+                            usersAge = Integer.parseInt(ageField.getText().toString());
+                            Log.v(TAG, "Age has been set to " + usersAge);
+                            // =============================
+                            nextQuestion(R.layout.activity_generate_routine_q4);
+
+                        }
                         break;
 
+
                     case 4:
+                        // ********
+                        // Are you male or female?
+                        // ********
+
                         // Perform actions for selection
                         // =============================
-
+                        genderGroup = (RadioGroup) findViewById(R.id.generateGenderGroup);
+                        if(genderGroup.indexOfChild(findViewById(genderGroup.getCheckedRadioButtonId())) == 0) {
+                            usersGender = "male";
+                        }
+                        else {
+                            usersGender = "female";
+                        }
+                        Log.v(TAG, "Gender has been set to " + usersGender);
 
                         // =============================
                         nextQuestion(R.layout.activity_generate_routine_q5);
@@ -160,13 +195,45 @@ public class GenerateRoutineActivity extends Activity {
 
 
                     case 5:
+                        // *********
+                        // What is your height and weight?
+                        // *********
+
                         // Perform actions for selection
                         // =============================
+                        heightField = (EditText) findViewById(R.id.generateHeightField);
+                        weightField = (EditText) findViewById(R.id.generateWeightField);
+
+                        // Check if the user has entered a valid height and weight
+                        if(heightField.getText().toString().isEmpty() || weightField.getText().toString().isEmpty()) {
+                            //User has not entered a valid height or weight so display a toast.
+                            Toast.makeText(GenerateRoutineActivity.this, "Enter a valid height and weight.", Toast.LENGTH_SHORT).show();
+
+                        }
+                        else {
+                            // User has entered a valid height and weight so save them and move to next question
+                            usersHeight = Double.parseDouble(heightField.getText().toString());
+                            Log.v(TAG, "Users height has been set to " + usersHeight + " centimeters");
+                            usersWeight = Double.parseDouble(weightField.getText().toString());
+                            Log.v(TAG, "Users weight has been set to " + usersWeight + " kilograms");
 
 
-                        // =============================
-                        nextQuestion(R.layout.activity_generate_routine_q6);
+                            // =============================
+                            nextQuestion(R.layout.activity_generate_routine_q6);
+
+                        }
                         break;
+
+                    case 6:
+                        // **********
+                        // How long do you spend in the gym?
+                        // **********
+
+                        timeGroup = (RadioGroup) findViewById(R.id.generateTimeGroup);
+                        workoutTime = timeGroup.indexOfChild(findViewById(timeGroup.getCheckedRadioButtonId()));
+                        Log.v(TAG, "Current workout time choice is " + workoutTime);
+                        currentQuestionNumber++;
+
 
                     default:
                         // Create the users workout depending on the variables that have been

@@ -34,7 +34,7 @@
         <item>@drawable/ic_profile</item>
         <item>@drawable/ic_achievements</item>
         <item>@drawable/ic_logs</item>
-        <item>@drawable/ic_profile</item>
+        <item>@drawable/ic_settings</item>
     </string-array>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>

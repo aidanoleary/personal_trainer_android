@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Height: "
+            android:text="Height (centimeters): "
             android:id="@+id/workoutDateText"
             android:layout_gravity="center_horizontal" />
 
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
             android:ems="10"
-            android:id="@+id/editText"
+            android:id="@+id/generateHeightField"
             android:layout_gravity="center_horizontal" />
 
     </LinearLayout>
@@ -48,7 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Height: "
+            android:text="Weight (Kilograms): "
             android:id="@+id/textView4"
             android:layout_gravity="center_horizontal" />
 
@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
             android:ems="10"
-            android:id="@+id/editText3"
+            android:id="@+id/generateWeightField"
             android:layout_gravity="center_horizontal" />
     </LinearLayout>
 

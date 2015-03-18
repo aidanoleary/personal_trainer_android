@@ -13,12 +13,25 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="20dp" />
 
-    <Switch
+    <RadioGroup
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/switch1"
+        android:id="@+id/generateGenderGroup"
         android:layout_gravity="center_horizontal"
-        android:textOff="Male"
-        android:textOn="Female" />
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Male"
+            android:id="@+id/radioButton"
+            android:checked="true" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Female"
+            android:id="@+id/radioButton2" />
+    </RadioGroup>
 
 </LinearLayout>
