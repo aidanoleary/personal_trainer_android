@@ -359,13 +359,8 @@ public class GenerateRoutineActivity extends Activity {
     }
 
     // Generate workout method - the logic :-)
+    // ================
     private User generateTheRoutine() {
-
-        // Initialise the workout variables
-        // numberOfExercises = 4;
-        // initialWeight = 10;
-        // numberOfReps = 10;
-        // numberOfSets = 3;
 
         // Create the user
         User user = new User();
@@ -453,99 +448,37 @@ public class GenerateRoutineActivity extends Activity {
         int numBiceps = 0;
         int numTriceps = 0;
 
-        // Create a string array of the muscle groups.
-        //String[] muscleGroups = {"legs", "back", "chest", "shoulders", "abs", "biceps", "triceps"};
-        String[] muscleGroups = {"chest", "triceps", "back", "biceps", "legs", "abs", "shoulders"};
+        // Initialise the number of exercises per muscle variable
+        int numExercisesPerMuscle = 0;
 
-
-        // Calculate the total number of exercises
-        int totalNumOfExercises = numberOfExercises * workoutDays.size();
-
-        // Get the number of exercises per muscle group
-        int numExercisesPerMuscle = (int) Math.ceil((totalNumOfExercises) / muscleGroups.length);
-        // If the numExercisesPerMuscle is 0 make it one exercise.
-        if(numExercisesPerMuscle == 0) numExercisesPerMuscle = 1;
-        //int numExercisesPerMuscle = (int) Math.floor((numberOfExercises * workoutDays.size() + 1) / numberOfMuscleGroups);
-
-
-        Log.v(TAG, "Total number of exercises: " + (totalNumOfExercises));
-        Log.v(TAG, "number of exercise per muscle: " + numExercisesPerMuscle);
-
-        // These variable are used below in the workoutDays case statement
-        // ========
-        // Create a counter to keep track of the number of exercises per muscle.
-        // Create a currentMuscleIndex variable to keep track of the current muscle
-        int counter = 1;
-        int currentMuscleIndex = 0;
-        int currentWorkoutIndex = 0;
-        //boolean stopper = false;
-        String currentMuscle = "";
-
-
-        //Create a counter to keep track of the number of exercises per muscle.
-        counter = 1;
-        currentMuscleIndex = 0;
-
-        for(int i = 0; i < totalNumOfExercises; i++) {
-
-            if (i % numberOfExercises == 0) {
-                Log.v(TAG, "current Workout day is: " + currentWorkoutIndex);
-                currentWorkoutIndex++;
-                //currentMuscleIndex++;
-                //stopper = true;
-            }
-
-            // Retrieve random exercise for muscle group
-            // To get the current muscle group get the current muscle index modulo the length of muscle groups.
-            currentMuscle = muscleGroups[currentMuscleIndex % muscleGroups.length];
-            Log.v(TAG, "current muscle group is: " + currentMuscle);
-
-            if ((counter == numExercisesPerMuscle)) {
-                counter = 1;
-                currentMuscleIndex++;
-            } else {
-                counter++;
-            }
-            //stopper = false;
-        }
+        // A counter to use in the loops below when adding extra exercises
+        int addExerciseCounter = 0;
 
         switch (workoutDays.size()) {
             case 1:
-                /*
-                //Create a counter to keep track of the number of exercises per muscle.
-                counter = 1;
-                currentMuscleIndex = 0;
-                for(int i = 0; i < totalNumOfExercises; i++) {
+                // day 1 = Mixed Workout
+                // ------
 
-                    if(i%numberOfExercises == 0) {
-                        Log.v(TAG, "current Workout day is: " + currentWorkoutIndex);
-                        currentWorkoutIndex++;
-                    }
+                // Create a string array of the muscle groups.
+                String[] muscleGroups = {"legs", "back", "chest", "shoulders", "abs", "biceps", "triceps"};
+                //String[] muscleGroups = {"chest", "triceps", "back", "biceps", "legs", "abs", "shoulders"};
 
-                    // Retrieve random exercise for muscle group
-                    // To get the current muscle group get the current muscle index modulo the length of muscle groups.
-                    currentMuscle = muscleGroups[currentMuscleIndex % muscleGroups.length];
-                    Log.v(TAG, "current muscle group is: " + currentMuscle);
+                // Calculate the total number of exercises
+                int totalNumOfExercises = numberOfExercises * workoutDays.size();
 
-                    if(counter == numExercisesPerMuscle) {
-                        counter = 1;
-                        currentMuscleIndex++;
-                    }
-                    else {
-                        counter++;
-                    }
+                // Get the number of exercises per muscle group
+                numExercisesPerMuscle = (int) Math.ceil((totalNumOfExercises) / muscleGroups.length);
+                // If the numExercisesPerMuscle is 0 make it one exercise.
+                if(numExercisesPerMuscle == 0) numExercisesPerMuscle = 1;
 
+                Log.v(TAG, "Total number of exercises: " + (totalNumOfExercises));
+                Log.v(TAG, "number of exercise per muscle: " + numExercisesPerMuscle);
 
+                Log.v(TAG, "Workout days case 1 has been entered. ");
 
-                    //workout.addExercise(new Exercise());
-                }
-                */
+                int counter = 1;
+                int currentMuscleIndex = 0;
 
-                // Loop and create exercises until the numberOfExercises has been reached.
-                //Workout workout = new Workout("Workout", "Full Body", workoutDays.get(0));
-
-
-                /*
                 for(int i = 0; i < numberOfExercises; i++) {
                     // Retrieve random exercise for muscle group
                     // To get the current muscle group get the current muscle index modulo the length of muscle groups.
@@ -559,17 +492,64 @@ public class GenerateRoutineActivity extends Activity {
                         counter++;
                     }
 
-
                     //workout.addExercise(new Exercise());
                 }
-                */
+
 
                 break;
             case 2:
-                //day 1 = chest, tris, and shoulders
+                // day 1 = chest, tris, and shoulders
+                // -------
+
+                // Get the number of exercises per muscle for the first day.
+                numExercisesPerMuscle = (int) Math.floor(numberOfExercises / 3);
+
+                numChest = numExercisesPerMuscle;
+                numTriceps = numExercisesPerMuscle;
+                numShoulders = numExercisesPerMuscle;
+
+                //
+
+                // While total number of exercises for this day is more than the actual number add one to number of chest exercises.
+                while((numChest + numTriceps + numShoulders) < numberOfExercises) {
+                    numChest++;
+                }
+
+                Log.v(TAG, "The total number of exercises for day 1 is: " + (numChest + numTriceps + numShoulders));
+                Log.v(TAG, "chest: " + numChest + " triceps: " + numTriceps + " shoulders: " + numShoulders);
+
+                // Retrieve the exercises from the database
+                // and add them to the first workout day.
 
 
-                //day 2 = back, biceps, legs, and abs
+                // day 2 = back, biceps, legs, and abs
+                // -------
+                numExercisesPerMuscle = (int) Math.floor(numberOfExercises / 4);
+
+                numBack = numBiceps = numLegs = numAbs = numExercisesPerMuscle;
+
+                addExerciseCounter = 0;
+
+                // loop adding exercises until the number of exercises has been reached
+                while((numBack + numBiceps + numLegs + numAbs) < numberOfExercises) {
+                    // if counter mod 4 equals 0, add a back exercise
+                    if((addExerciseCounter % 4) == 0) {
+                        numBack++;
+                    }
+                    else if((addExerciseCounter % 4) == 1) {
+                        numBiceps++;
+                    }
+                    else if((addExerciseCounter % 4) == 2) {
+                        numLegs++;
+                    }
+                    else if((addExerciseCounter % 4) == 3) {
+                        numAbs++;
+                    }
+                    addExerciseCounter++;
+                }
+
+                Log.v(TAG, "The total number of exercises for day 2 is: " + (numBack + numBiceps + numLegs + numAbs));
+                Log.v(TAG, "back: " + numBack + " biceps: " + numBiceps + " legs: " + numLegs + " abs: " + numAbs);
 
                 break;
 
