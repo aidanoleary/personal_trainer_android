@@ -6,6 +6,7 @@ package com.aidanoleary.personaltrainer.models;
 public class Exercise {
 
     private int id;
+    private int serverId;
     private String name;
     private String description;
     private String level;
@@ -110,6 +111,10 @@ public class Exercise {
         this.sets = sets;
     }
 
+    public void setServerId(int serverId) {
+        this.serverId = serverId;
+    }
+
 
     // Getters
     public int getId() {
@@ -162,6 +167,10 @@ public class Exercise {
 
     public int getSets() {
         return this.sets;
+    }
+
+    public int getServerId() {
+        return this.serverId;
     }
 
 

@@ -16,6 +16,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.aidanoleary.personaltrainer.models.User;
+
 import java.util.ArrayList;
 
 
@@ -45,17 +47,32 @@ public class GenerateRoutineActivity extends Activity {
     // Workout variables
     // An integer variable to represent the users goal
     // Variables used to store question information until end where workout is generated.
+
+    // Used to determine the number of reps and initial weight
     private int goal;
+    // Determines the amount of workouts in the routine, and how exercises and muscle groups are divided
     private ArrayList<String> workoutDays;
+    // Used to determine the weight the user should be lifting
     private int usersAge;
+    // Used to determine the weight the user should be lifting
     private String usersGender;
+
+    // Used to determine the usersBMI
     private double usersHeight;
     private double usersWeight;
+    // Used to determine the number of exercises
     private int workoutTime;
 
+    // Set the initial weight dependent on usersGoal, usersAge, usersGender
+    private double initialWeight;
+    // Set the number of exercises dependent on the workout time
     private int numberOfExercises;
+    // Set the number of reps dependent on the users goal
     private int numberOfReps;
+    // Set the number of sets dependent on the users goal
     private int numberOfSets;
+    // Set the usersBMI depending on the usersHeight and usersWeight
+    // TODO deal with BMI later if I have time
     private int usersBMI;
 
     // user variables
@@ -238,6 +255,7 @@ public class GenerateRoutineActivity extends Activity {
                     default:
                         // Create the users workout depending on the variables that have been
                         // generated.
+                        generateTheRoutine();
 
                         // Update the Database
 
@@ -338,5 +356,257 @@ public class GenerateRoutineActivity extends Activity {
         currentQuestionNumber--;
         questionNumberText.setText("Question: " + currentQuestionNumber);
         changeView(layoutId);
+    }
+
+    // Generate workout method - the logic :-)
+    private User generateTheRoutine() {
+
+        // Initialise the workout variables
+        // numberOfExercises = 4;
+        // initialWeight = 10;
+        // numberOfReps = 10;
+        // numberOfSets = 3;
+
+        // Create the user
+        User user = new User();
+        user.setAge(usersAge);
+        user.setHeight(usersHeight);
+        user.setWeight(usersWeight);
+        user.setGender(usersGender);
+
+        // Make changes dependent on the users goal
+        // ==============
+        switch (goal) {
+            case 0:
+                //build muscle
+                initialWeight = 15;
+                numberOfReps = 6;
+                numberOfSets = 3;
+                break;
+            case 1:
+                //lose weight
+                initialWeight = 10;
+                numberOfReps = 12;
+                numberOfSets = 4;
+                break;
+            case 2:
+                //general fitness
+                initialWeight = 10;
+                numberOfReps = 10;
+                numberOfSets = 3;
+                break;
+            case 3:
+                //get stronger
+                initialWeight = 12.5;
+                numberOfReps = 8;
+                numberOfSets = 3;
+                break;
+        }
+
+        // Make changes dependent on the workout time
+        // ===========
+        // Set the number of exercises dependent on the workout time
+        // The specifies the number of exercises that will be in each routine.
+
+        //TODO come back and work on this later if I have time or think of a way of doing this.
+
+        switch (workoutTime) {
+            case 0:
+                //0m - 30m
+                numberOfExercises = 4;
+                break;
+            case 1:
+                //31m - 1h
+                numberOfExercises = 6;
+                break;
+            case 2:
+                // This was the first amount of exercises to be calculated due to how long I spend in the gym
+                // and how many exercises I do.
+                //1h - 1h30m
+                numberOfExercises = 8;
+                break;
+            case 3:
+                //over 1h30m
+                numberOfExercises = 10;
+                break;
+        }
+
+        // Make changes dependent on the users gender.
+        // ===========
+        if(usersGender == "female") {
+            initialWeight -= 2.5;
+        }
+
+        // Make changes dependent on the users age.
+        // ===========
+        if(usersAge >= 60 || usersAge <= 16) {
+            initialWeight -= 2.5;
+        }
+
+
+        // Set the amount of exercises for each muscle group by examining the workout time (numberOfExercises) and number of workout days (length of workout days).
+        int numLegs = 0;
+        int numBack = 0;
+        int numChest = 0;
+        int numShoulders= 0;
+        int numAbs = 0;
+        int numBiceps = 0;
+        int numTriceps = 0;
+
+        // Create a string array of the muscle groups.
+        String[] muscleGroups = {"legs", "back", "chest", "shoulders", "abs", "biceps", "triceps"};
+
+
+        // Calculate the total number of exercises
+        int totalNumOfExercises = numberOfExercises * workoutDays.size();
+
+        // Get the number of exercises per muscle group
+        int numExercisesPerMuscle = (int) Math.ceil((totalNumOfExercises) / muscleGroups.length);
+        // If the numExercisesPerMuscle is 0 make it one exercise.
+        if(numExercisesPerMuscle == 0) numExercisesPerMuscle = 1;
+        //int numExercisesPerMuscle = (int) Math.floor((numberOfExercises * workoutDays.size() + 1) / numberOfMuscleGroups);
+
+        Log.v(TAG, "Total number of exercises: " + (totalNumOfExercises));
+        Log.v(TAG, "number of exercise per muscle: " + numExercisesPerMuscle);
+
+        // These variable are used below in the workoutDays case statement
+        // ========
+        // Create a counter to keep track of the number of exercises per muscle.
+        // Create a currentMuscleIndex variable to keep track of the current muscle
+        int counter = 1;
+        int currentMuscleIndex = 0;
+        int currentWorkoutIndex = 0;
+        String currentMuscle = "";
+
+        switch (workoutDays.size()) {
+            case 1:
+                /*
+                //Create a counter to keep track of the number of exercises per muscle.
+                counter = 1;
+                currentMuscleIndex = 0;
+                for(int i = 0; i < totalNumOfExercises; i++) {
+
+                    if(i%numberOfExercises == 0) {
+                        Log.v(TAG, "current Workout day is: " + currentWorkoutIndex);
+                        currentWorkoutIndex++;
+                    }
+
+                    // Retrieve random exercise for muscle group
+                    // To get the current muscle group get the current muscle index modulo the length of muscle groups.
+                    currentMuscle = muscleGroups[currentMuscleIndex % muscleGroups.length];
+                    Log.v(TAG, "current muscle group is: " + currentMuscle);
+
+                    if(counter == numExercisesPerMuscle) {
+                        counter = 1;
+                        currentMuscleIndex++;
+                    }
+                    else {
+                        counter++;
+                    }
+
+
+
+                    //workout.addExercise(new Exercise());
+                }
+                */
+
+                // Loop and create exercises until the numberOfExercises has been reached.
+                //Workout workout = new Workout("Workout", "Full Body", workoutDays.get(0));
+
+
+                /*
+                for(int i = 0; i < numberOfExercises; i++) {
+                    // Retrieve random exercise for muscle group
+                    // To get the current muscle group get the current muscle index modulo the length of muscle groups.
+                    Log.v(TAG, "current muscle group is: " + muscleGroups[currentMuscleIndex % muscleGroups.length]);
+
+                    if(counter == numExercisesPerMuscle) {
+                        counter = 1;
+                        currentMuscleIndex++;
+                    }
+                    else {
+                        counter++;
+                    }
+
+
+                    //workout.addExercise(new Exercise());
+                }
+                */
+
+                break;
+            case 2:
+                //Create a counter to keep track of the number of exercises per muscle.
+                counter = 1;
+                currentMuscleIndex = 0;
+                for(int i = 0; i < totalNumOfExercises; i++) {
+
+                    if(i%numberOfExercises == 0) {
+                        Log.v(TAG, "current Workout day is: " + currentWorkoutIndex);
+                        currentWorkoutIndex++;
+                    }
+
+                    // Retrieve random exercise for muscle group
+                    // To get the current muscle group get the current muscle index modulo the length of muscle groups.
+                    currentMuscle = muscleGroups[currentMuscleIndex % muscleGroups.length];
+                    Log.v(TAG, "current muscle group is: " + currentMuscle);
+
+                    if(counter == numExercisesPerMuscle) {
+                        counter = 1;
+                        currentMuscleIndex++;
+                    }
+                    else {
+                        counter++;
+                    }
+
+
+
+                    //workout.addExercise(new Exercise());
+                }
+
+                break;
+
+            case 3:
+
+                break;
+
+            case 4:
+
+
+                break;
+
+            case 5:
+
+
+
+                break;
+
+            case 6:
+
+
+
+                break;
+
+            case 7:
+
+
+
+                break;
+        }
+
+
+
+
+        return user;
+
+
+
+        // Start generating the workout
+
+
+
+
+
+
+
     }
 }

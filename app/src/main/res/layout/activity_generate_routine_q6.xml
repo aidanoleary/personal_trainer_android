@@ -46,18 +46,11 @@
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1h31m - 2h"
+            android:text="Over 1h30min"
             android:id="@+id/radioButton4"
             android:layout_gravity="center_horizontal"
             android:checked="false" />
 
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="over 2h"
-            android:id="@+id/radioButton5"
-            android:layout_gravity="center_horizontal"
-            android:checked="false" />
     </RadioGroup>
 
 </LinearLayout>

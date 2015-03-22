@@ -187,8 +187,6 @@ public class WorkoutFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String result) {
-            // Log.v(TAG, result);
-            // TODO CONTINUE HERE 00000000000000000
             try {
                 //Create a JSON array of the retrieved results
                 JSONArray exercisesArray = new JSONArray(result);
@@ -216,7 +214,7 @@ public class WorkoutFragment extends Fragment {
                         currentJsonExercise = exercisesArray.getJSONObject(i);
 
                         //Create the current exercise object
-                        currentExercise.setId(currentJsonExercise.getInt("id"));
+                        currentExercise.setServerId(currentJsonExercise.getInt("id"));
                         currentExercise.setName(currentJsonExercise.getString("name"));
                         currentExercise.setDescription(currentJsonExercise.getString("description"));
                         currentExercise.setLevel(currentJsonExercise.getString("level"));
@@ -225,7 +223,7 @@ public class WorkoutFragment extends Fragment {
                         currentExercise.setEquipment(currentJsonExercise.getString("equipment"));
                         currentExercise.setType(currentJsonExercise.getString("e_type"));
                         currentExercise.setMechanics(currentJsonExercise.getString("mechanics"));
-                        currentExercise.setImageUrl(currentJsonExercise.getString("image_url"));
+                        currentExercise.setImageUrl(currentJsonExercise.getString("e_image"));
 
                         // Add the exercise to sqlite database
                         db.insertExerciseWithId(currentExercise);
@@ -237,8 +235,6 @@ public class WorkoutFragment extends Fragment {
 
                     // Close the connection to the database
                     db.close();
-
-                    //TODO check this works1
 
                 } catch (Exception e) {
                     e.printStackTrace();

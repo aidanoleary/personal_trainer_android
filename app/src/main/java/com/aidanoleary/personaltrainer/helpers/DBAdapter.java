@@ -199,7 +199,7 @@ public class DBAdapter {
 
     public long insertExerciseWithId(Exercise exercise) {
         ContentValues initialValues = new ContentValues();
-        initialValues.put("id", exercise.getId());
+        initialValues.put("server_id", exercise.getServerId());
         initialValues.put("name", exercise.getName());
         initialValues.put("description", exercise.getDescription());
         initialValues.put("level", exercise.getLevel());
