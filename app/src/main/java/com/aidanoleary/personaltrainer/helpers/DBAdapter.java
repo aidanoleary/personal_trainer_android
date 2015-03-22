@@ -16,6 +16,7 @@ import com.aidanoleary.personaltrainer.models.Workout;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 /**
  * Created by aidanoleary on 14/01/2015.
@@ -265,9 +266,56 @@ public class DBAdapter {
     }
 
 
-    /*
+
     // Retrieving items from the database
     // ==================================
+
+    // Retrieve an Arraylist of all the exercises for a particular muscle group
+    public ArrayList<Exercise> getExercisesByMainMuscleList(String mainMuscle) {
+        String selectQuery = "SELECT * FROM exercise WHERE main_muscle = '" + mainMuscle + "'";
+        Cursor mCursor = db.rawQuery(selectQuery, null);
+
+        //Create the ArrayList of exercises that will be returned.
+        ArrayList<Exercise> exercises = new ArrayList<Exercise>();
+
+        // Check if the cursor has returned results
+        if(mCursor != null) {
+            //Move to the first element of the returned results.
+            mCursor.moveToFirst();
+            Exercise currentExercise = new Exercise();
+            //Loop through the retrieved results adding the exercises to the arraylist.
+            for(int i = 0; i < mCursor.getCount(); i++) {
+                currentExercise.setId(mCursor.getInt(mCursor.getColumnIndex("id")));
+                currentExercise.setName(mCursor.getString(mCursor.getColumnIndex("name")));
+                currentExercise.setServerId(mCursor.getInt(mCursor.getColumnIndex("server_id")));
+                currentExercise.setDescription(mCursor.getString(mCursor.getColumnIndex("description")));
+                currentExercise.setLevel(mCursor.getString(mCursor.getColumnIndex("level")));
+                currentExercise.setMainMuscle(mCursor.getString(mCursor.getColumnIndex("main_muscle")));
+                currentExercise.setOtherMuscles(mCursor.getString(mCursor.getColumnIndex("other_muscles")));
+                currentExercise.setEquipment(mCursor.getString(mCursor.getColumnIndex("equipment")));
+                currentExercise.setType(mCursor.getString(mCursor.getColumnIndex("type")));
+                currentExercise.setMechanics(mCursor.getString(mCursor.getColumnIndex("mechanics")));
+                currentExercise.setImageUrl(mCursor.getString(mCursor.getColumnIndex("image_url")));
+                exercises.add(currentExercise);
+                mCursor.moveToNext();
+            }
+        }
+
+        return exercises;
+    }
+
+    // Get Exercises by muscle but only return a cursor object.
+    public Cursor getExercisesByMainMuscle(String mainMuscle) {
+        String selectQuery = "SELECT * FROM exercise WHERE main_muscle = '" + mainMuscle + "'";
+        Cursor mCursor = db.rawQuery(selectQuery, null);
+        if(mCursor != null) {
+            mCursor.moveToFirst();
+        }
+
+        return mCursor;
+    }
+
+    /*
     public User getUser(String userEmail) {
 
         String selectQuery = "SELECT * FROM user WHERE email = '" + userEmail + "'";

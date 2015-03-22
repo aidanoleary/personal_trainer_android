@@ -566,35 +566,10 @@ public class GenerateRoutineActivity extends Activity {
 
                 break;
             case 2:
-                /*
-                //Create a counter to keep track of the number of exercises per muscle.
-                counter = 1;
-                currentMuscleIndex = 0;
-                for(int i = 0; i < totalNumOfExercises; i++) {
-
-                    if(i%numberOfExercises == 0) {
-                        Log.v(TAG, "current Workout day is: " + currentWorkoutIndex);
-                        currentWorkoutIndex++;
-                    }
-
-                    // Retrieve random exercise for muscle group
-                    // To get the current muscle group get the current muscle index modulo the length of muscle groups.
-                    currentMuscle = muscleGroups[currentMuscleIndex % muscleGroups.length];
-                    Log.v(TAG, "current muscle group is: " + currentMuscle);
-
-                    if(counter == numExercisesPerMuscle) {
-                        counter = 1;
-                        currentMuscleIndex++;
-                    }
-                    else {
-                        counter++;
-                    }
+                //day 1 = chest, tris, and shoulders
 
 
-
-                    //workout.addExercise(new Exercise());
-                }
-                */
+                //day 2 = back, biceps, legs, and abs
 
                 break;
 
@@ -615,24 +590,54 @@ public class GenerateRoutineActivity extends Activity {
 
                 //day 3 = legs and abs
 
-                //day 5 = shoulders
+                //day 4 = shoulders
 
                 break;
 
             case 5:
+                //day 1 = chest
 
+                //day 2 = back
+
+                //day 3 = tris and bis
+
+                //day 4 = legs and abs
+
+                //day 5 = shoulders
 
 
                 break;
 
             case 6:
+                //day 1 = chest
 
+                //day 2 = back
+
+                //day 3 = tris and bis
+
+                //day 4 = legs and abs
+
+                //day 5 = shoulders
+
+                //day 6 = back
 
 
                 break;
 
             case 7:
+                //day 1 = chest
 
+                //day 2 = back
+
+                //day 3 = tris and bis
+
+                //day 4 = legs and abs
+
+                //day 5 = shoulders
+
+                //day 6 = chest
+
+                //day 7 = back
 
 
                 break;
