@@ -271,7 +271,7 @@ public class DBAdapter {
     // ==================================
 
     // Retrieve an Arraylist of all the exercises for a particular muscle group
-    public ArrayList<Exercise> getExercisesByMainMuscleList(String mainMuscle) {
+    public ArrayList<Exercise> getExercisesByMainMuscle(String mainMuscle) {
         String selectQuery = "SELECT * FROM exercise WHERE main_muscle = '" + mainMuscle + "'";
         Cursor mCursor = db.rawQuery(selectQuery, null);
 
@@ -282,9 +282,12 @@ public class DBAdapter {
         if(mCursor != null) {
             //Move to the first element of the returned results.
             mCursor.moveToFirst();
-            Exercise currentExercise = new Exercise();
+            Exercise currentExercise;
             //Loop through the retrieved results adding the exercises to the arraylist.
             for(int i = 0; i < mCursor.getCount(); i++) {
+
+                currentExercise = new Exercise();
+
                 currentExercise.setId(mCursor.getInt(mCursor.getColumnIndex("id")));
                 currentExercise.setName(mCursor.getString(mCursor.getColumnIndex("name")));
                 currentExercise.setServerId(mCursor.getInt(mCursor.getColumnIndex("server_id")));
@@ -296,6 +299,7 @@ public class DBAdapter {
                 currentExercise.setType(mCursor.getString(mCursor.getColumnIndex("type")));
                 currentExercise.setMechanics(mCursor.getString(mCursor.getColumnIndex("mechanics")));
                 currentExercise.setImageUrl(mCursor.getString(mCursor.getColumnIndex("image_url")));
+
                 exercises.add(currentExercise);
                 mCursor.moveToNext();
             }
@@ -304,6 +308,7 @@ public class DBAdapter {
         return exercises;
     }
 
+    /*
     // Get Exercises by muscle but only return a cursor object.
     public Cursor getExercisesByMainMuscle(String mainMuscle) {
         String selectQuery = "SELECT * FROM exercise WHERE main_muscle = '" + mainMuscle + "'";
@@ -314,6 +319,7 @@ public class DBAdapter {
 
         return mCursor;
     }
+    */
 
     /*
     public User getUser(String userEmail) {
