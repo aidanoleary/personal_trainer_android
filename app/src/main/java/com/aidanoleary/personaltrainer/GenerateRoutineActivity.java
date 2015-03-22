@@ -16,6 +16,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.aidanoleary.personaltrainer.models.Exercise;
 import com.aidanoleary.personaltrainer.models.User;
 
 import java.util.ArrayList;
@@ -503,16 +504,21 @@ public class GenerateRoutineActivity extends Activity {
 
                 // Get the number of exercises per muscle for the first day.
                 numExercisesPerMuscle = (int) Math.floor(numberOfExercises / 3);
-
-                numChest = numExercisesPerMuscle;
-                numTriceps = numExercisesPerMuscle;
-                numShoulders = numExercisesPerMuscle;
-
-                //
+                numChest = numTriceps = numShoulders = numExercisesPerMuscle;
+                addExerciseCounter = 0;
 
                 // While total number of exercises for this day is more than the actual number add one to number of chest exercises.
                 while((numChest + numTriceps + numShoulders) < numberOfExercises) {
-                    numChest++;
+                    if((addExerciseCounter % 3) == 0) {
+                        numChest++;
+                    }
+                    else if((addExerciseCounter % 3) == 1) {
+                        numTriceps++;
+                    }
+                    else if((addExerciseCounter % 3) == 2) {
+                        numShoulders++;
+                    }
+                    addExerciseCounter++;
                 }
 
                 Log.v(TAG, "The total number of exercises for day 1 is: " + (numChest + numTriceps + numShoulders));
@@ -525,9 +531,7 @@ public class GenerateRoutineActivity extends Activity {
                 // day 2 = back, biceps, legs, and abs
                 // -------
                 numExercisesPerMuscle = (int) Math.floor(numberOfExercises / 4);
-
                 numBack = numBiceps = numLegs = numAbs = numExercisesPerMuscle;
-
                 addExerciseCounter = 0;
 
                 // loop adding exercises until the number of exercises has been reached
@@ -555,70 +559,160 @@ public class GenerateRoutineActivity extends Activity {
 
             case 3:
                 Log.v(TAG, "case 3 has been entered. ");
-                //day 1 = chest, tris, and shoulders
+                // day 1 = chest, tris, and shoulders
+                // ----------------
 
-                //day 2 = back and bis
+                // Get the number of exercises per muscle for the first day.
+                numExercisesPerMuscle = (int) Math.floor(numberOfExercises / 3);
+                numChest = numTriceps = numShoulders = numExercisesPerMuscle;
+                addExerciseCounter = 0;
 
-                //day 3 = legs and abs
+                // While total number of exercises for this day is more than the actual number add one to number of chest exercises.
+                while((numChest + numTriceps + numShoulders) < numberOfExercises) {
+                    if((addExerciseCounter % 3) == 0) {
+                        numChest++;
+                    }
+                    else if((addExerciseCounter % 3) == 1) {
+                        numTriceps++;
+                    }
+                    else if((addExerciseCounter % 3) == 2) {
+                        numShoulders++;
+                    }
+                    addExerciseCounter++;
+                }
+
+                Log.v(TAG, "The total number of exercises for day 1 is: " + (numChest + numTriceps + numShoulders));
+                Log.v(TAG, "chest: " + numChest + " triceps: " + numTriceps + " shoulders: " + numShoulders);
+
+                // ----------------
+
+
+                // day 2 = back and bis
+                // -----------------
+
+                // Get the number of exercises per muscle for second first day.
+                numExercisesPerMuscle = (int) Math.floor(numberOfExercises / 2);
+                numBack = numBiceps = numExercisesPerMuscle;
+                addExerciseCounter = 0;
+
+                // While total number of exercises for this day is more than the actual number add one to number of chest exercises.
+                while((numBack + numBiceps) < numberOfExercises) {
+                    if((addExerciseCounter % 2) == 0) {
+                        numBack++;
+                    }
+                    else if((addExerciseCounter % 2) == 1) {
+                        numBiceps++;
+                    }
+                    addExerciseCounter++;
+                }
+
+                Log.v(TAG, "The total number of exercises for day 1 is: " + (numBack + numBiceps));
+                Log.v(TAG, "back: " + numBack + " biceps: " + numBiceps);
+
+                // ------------------
+
+
+                // day 3 = legs and abs
+                // ------------------
+
+                // Get the number of exercises per muscle for second third day.
+                numExercisesPerMuscle = (int) Math.floor(numberOfExercises / 2);
+                numLegs = numAbs = numExercisesPerMuscle;
+                addExerciseCounter = 0;
+
+                // While total number of exercises for this day is more than the actual number add one to the next exercise
+                while((numLegs + numAbs) < numberOfExercises) {
+                    if((addExerciseCounter % 2) == 0) {
+                        numLegs++;
+                    }
+                    else if((addExerciseCounter % 2) == 1) {
+                        numAbs++;
+                    }
+                    addExerciseCounter++;
+                }
+
+                Log.v(TAG, "The total number of exercises for day 1 is: " + (numLegs + numAbs));
+                Log.v(TAG, "legs: " + numLegs + " abs: " + numAbs);
+
+                // ------------------
 
                 break;
 
             case 4:
                 //day 1 = chest and tris
+                getDaysExercises(new String[] {"chest", "triceps"});
 
                 //day 2 = back and bis
+                getDaysExercises(new String[] {"back", "biceps"});
 
                 //day 3 = legs and abs
+                getDaysExercises(new String[] {"legs", "abs"});
 
                 //day 4 = shoulders
+                getDaysExercises(new String[] {"shoulders"});
 
                 break;
 
             case 5:
                 //day 1 = chest
+                getDaysExercises(new String[] {"chest"});
 
                 //day 2 = back
+                getDaysExercises(new String[] {"back"});
 
                 //day 3 = tris and bis
+                getDaysExercises(new String[] {"triceps", "biceps"});
 
                 //day 4 = legs and abs
+                getDaysExercises(new String[] {"legs", "abs"});
 
                 //day 5 = shoulders
-
+                getDaysExercises(new String[] {"shoulders"});
 
                 break;
 
             case 6:
                 //day 1 = chest
+                getDaysExercises(new String[] {"chest"});
 
                 //day 2 = back
+                getDaysExercises(new String[] {"back"});
 
                 //day 3 = tris and bis
+                getDaysExercises(new String[] {"triceps", "biceps"});
 
                 //day 4 = legs and abs
+                getDaysExercises(new String[] {"legs", "abs"});
 
                 //day 5 = shoulders
+                getDaysExercises(new String[] {"shoulders"});
 
-                //day 6 = back
-
+                //day 6 = chest
+                getDaysExercises(new String[] {"chest"});
 
                 break;
 
             case 7:
                 //day 1 = chest
+                getDaysExercises(new String[] {"chest"});
 
                 //day 2 = back
+                getDaysExercises(new String[] {"back"});
 
                 //day 3 = tris and bis
+                getDaysExercises(new String[] {"triceps", "biceps"});
 
                 //day 4 = legs and abs
+                getDaysExercises(new String[] {"legs", "abs"});
 
                 //day 5 = shoulders
+                getDaysExercises(new String[] {"shoulders"});
 
                 //day 6 = chest
+                getDaysExercises(new String[] {"chest"});
 
                 //day 7 = back
-
+                getDaysExercises(new String[] {"back"});
 
                 break;
         }
@@ -638,5 +732,44 @@ public class GenerateRoutineActivity extends Activity {
 
 
 
+    }
+
+    public ArrayList<Exercise> getDaysExercises(String[] muscles) {
+
+        //Create a new arraylist of exercises
+        ArrayList<Exercise> exercises = new ArrayList<Exercise>();
+
+        // Get the estimated number of exercises per muscle. Round this down to the closest integer.
+        // If the total is lower than the numberOfExercises it will get incremented later.
+        int numExercisesPerMuscle = (int) Math.floor(numberOfExercises / muscles.length);
+
+        // Create an array of values to represent the number of exercises for each muscle.
+        int[] listNumExercisesEachMuscle = new int[muscles.length];
+        int totalExercises = 0;
+
+        // Loop through the created array setting the each value to the number of exercises per muscle.
+        for(int i = 0; i < listNumExercisesEachMuscle.length; i++) {
+            listNumExercisesEachMuscle[i] = numExercisesPerMuscle;
+            totalExercises += numExercisesPerMuscle;
+        }
+
+        // Create a add exercise counter to be used later to specify which muscles exercises to increment.
+        int addExerciseCounter = 0;
+
+        // While total number of exercises for this day is more than the actual number add one to the next exercise
+        while((totalExercises) < numberOfExercises) {
+            listNumExercisesEachMuscle[(addExerciseCounter % listNumExercisesEachMuscle.length)]++;
+            addExerciseCounter++;
+            totalExercises++;
+        }
+
+        // Log the number of exercises for each muscle.
+        Log.v(TAG, "The total number of exercises for the day is: " + (totalExercises));
+        for(int i = 0; i < muscles.length; i++) {
+            Log.v(TAG, muscles[i] + ": " + listNumExercisesEachMuscle[i]);
+        }
+
+        // Return the array list of exercises
+        return exercises;
     }
 }
