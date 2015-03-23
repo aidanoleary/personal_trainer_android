@@ -465,67 +465,80 @@ public class GenerateRoutineActivity extends Activity {
         // A Routine to store the users workouts in.
         Routine routine;
 
-        // Create an arraylist to store the workouts
-        ArrayList<Workout> workouts = new ArrayList<Workout>();
-
-        ArrayList<Exercise> exercises = new ArrayList<Exercise>();
+        // A multidimensional array of strings to represent the muscles in each day of the workout.
+        // each inner array represents a day and each string represents a muscle.
+        String[][] musclesAndDays;
 
         switch (workoutDays.size()) {
             case 1:
                 // day 1 = Mixed Workout
-                exercises = getDaysExercises(new String[] {"chest", "triceps", "back", "biceps", "legs", "abs", "shoulders"});
-                workouts.add(new Workout("chest, triceps, back, biceps, legs, abs, shoulders", workoutDays.get(0), exercises));
+
+                // Get the routines workouts
+                musclesAndDays = new String[][] {{"chest", "triceps", "back", "biceps", "legs", "abs", "shoulders"}};
+                routine = new Routine("My Routine", "This is my custom routine", getRoutinesWorkouts(musclesAndDays));
+                Log.v(TAG, "case 1 routine, workout 1, exercise 1: " + routine.getWorkouts().get(0).getExercise(0).getName());
 
                 break;
 
             case 2:
+
                 // day 1 = chest, tris, and shoulders
-                exercises = getDaysExercises(new String[] {"chest", "triceps", "legs", "shoulders"});
-                workouts.add(new Workout("chest, triceps, legs, shoulders", workoutDays.get(0), exercises));
-
                 // day 2 = back, biceps, legs, and abs
-                exercises = getDaysExercises(new String[] {"back", "biceps", "legs", "abs"});
-                workouts.add(new Workout("back, biceps, legs, abs", workoutDays.get(1), exercises));
 
-                routine = new Routine("My Routine", "This is my custom routine", workouts);
-                user.setRoutine(routine);
+                musclesAndDays = new String[][] {{"chest", "triceps", "shoulders"}, {"back", "biceps", "legs", "abs"}};
+                routine = new Routine("My Routine", "This is my custom routine", getRoutinesWorkouts(musclesAndDays));
+                Log.v(TAG, "case 2 routine, workout 1, exercise 1: " + routine.getWorkouts().get(0).getExercise(0).getName());
 
                 break;
 
             case 3:
+
                 // day 1 = chest, tris, and shoulders
-                exercises = getDaysExercises(new String[] {"chest", "triceps", "shoulders"});
-                workouts.add(new Workout("chest, triceps, shoulders", workoutDays.get(0), exercises));
-
                 // day 2 = back and bis
-                exercises = getDaysExercises(new String[]{"back", "biceps"});
-                workouts.add(new Workout("back, biceps", workoutDays.get(1), exercises));
-
                 // day 3 = legs and abs
-                exercises = getDaysExercises(new String[]{"legs", "abs"});
-                workouts.add(new Workout("legs, abs", workoutDays.get(2), exercises));
 
-                routine = new Routine("My Routine", "This is my custom routine", workouts);
-                user.setRoutine(routine);
+                musclesAndDays = new String[][] {{"chest", "triceps", "shoulders"}, {"back", "biceps"}, {"legs", "abs"}};
+                routine = new Routine("My Routine", "This is my custom routine", getRoutinesWorkouts(musclesAndDays));
+                Log.v(TAG, "case 3 routine, workout 1, exercise 1: " + routine.getWorkouts().get(0).getExercise(0).getName());
 
                 break;
 
             case 4:
+
                 //day 1 = chest and tris
-                getDaysExercises(new String[] {"chest", "triceps"});
-
                 //day 2 = back and bis
-                getDaysExercises(new String[] {"back", "biceps"});
-
                 //day 3 = legs and abs
-                getDaysExercises(new String[] {"legs", "abs"});
-
                 //day 4 = shoulders
-                getDaysExercises(new String[] {"shoulders"});
+
+                musclesAndDays = new String[][] {{"chest", "triceps"}, {"back", "biceps"}, {"legs", "abs"}, {"shoulders"}};
+                routine = new Routine("My Routine", "This is my custom routine", getRoutinesWorkouts(musclesAndDays));
+                Log.v(TAG, "case 4 routine, workout 1, exercise 1: " + routine.getWorkouts().get(0).getExercise(0).getName());
 
                 break;
 
             case 5:
+
+                // Get the routines workouts
+                musclesAndDays = new String[][] {{"chest"}, {"back"}, {"triceps", "biceps"}, {"legs", "abs"}, {"shoulders"}};
+                routine = new Routine("My Routine", "This is my custom routine", getRoutinesWorkouts(musclesAndDays));
+                Log.v(TAG, "case 5 routine, workout 1, exercise 1: " + routine.getWorkouts().get(0).getExercise(0).getName());
+
+                // Create a multidimensional array of muscles and days.
+                /*
+                String[][] musclesAndDays = new String[][] {{"chest"}, {"back"}, {"triceps", "biceps"}, {"legs", "abs"}, {"shoulders"}};
+
+                String workoutName = "";
+
+                for(int i = 0; i < musclesAndDays.length; i++) {
+                    exercises = getDaysExercises(musclesAndDays[i]);
+                    workoutName = musclesAndDays[i].toString();
+                    Log.v(TAG, "The workout name 55555 is: " + workoutName);
+                    workouts.add(new Workout(workoutName, workoutDays.get(i), exercises));
+                }
+                routine = new Routine("My Routine", "This is my custom routine", workouts);
+                */
+
+                /*
                 //day 1 = chest
                 getDaysExercises(new String[] {"chest"});
 
@@ -540,6 +553,9 @@ public class GenerateRoutineActivity extends Activity {
 
                 //day 5 = shoulders
                 getDaysExercises(new String[] {"shoulders"});
+                */
+
+
 
                 break;
 
@@ -598,7 +614,8 @@ public class GenerateRoutineActivity extends Activity {
 
     // A method to retrieve the number of exercises for a day, it takes an array of the names of the muscles that will
     // be trained.
-    public ArrayList<Exercise> getDaysExercises(String[] muscles) {
+    // ==========
+    private ArrayList<Exercise> getDaysExercises(String[] muscles) {
 
         db = new DBAdapter(this);
 
@@ -684,5 +701,32 @@ public class GenerateRoutineActivity extends Activity {
 
         // Return the array list of exercises
         return exercises;
+    }
+
+    // Get the routines workouts this uses the previously created getDaysExercises method
+    // It accepts a 2-dimension array of strings each inner array should represent a day, and
+    // each string with these should represent a muscle that will be trained.
+    // =====================
+    private ArrayList<Workout> getRoutinesWorkouts(String[][] musclesAndDays) {
+        //musclesAndDays = new String[][] {{"chest"}, {"back"}, {"triceps", "biceps"}, {"legs", "abs"}, {"shoulders"}};
+
+        // create a String to use when adding the workouts name
+        String workoutName = "";
+
+        // create an arraylsit of exercises to use in the loop below when gathering each workout exercises
+        ArrayList<Exercise> currentExercises = new ArrayList<Exercise>();
+
+        // Create an arraylist to store the workouts
+        ArrayList<Workout> workouts = new ArrayList<Workout>();
+
+        for(int i = 0; i < musclesAndDays.length; i++) {
+            currentExercises = getDaysExercises(musclesAndDays[i]);
+            workoutName = musclesAndDays[i].toString();
+            Log.v(TAG, "The workout name 55555 is: " + workoutName);
+            workouts.add(new Workout(workoutName, workoutDays.get(i), currentExercises));
+        }
+
+        // return the gathered list of workouts.
+        return workouts;
     }
 }

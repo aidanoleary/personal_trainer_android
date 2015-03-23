@@ -18,11 +18,12 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:layout_width="155dp"
+                android:layout_width="wrap_content"
                 android:layout_height="155dp"
                 android:id="@+id/loginLogoImage"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp" />
+                android:layout_marginTop="20dp"
+                android:src="@drawable/logo1" />
 
             <EditText
                 android:layout_width="match_parent"
@@ -48,7 +49,8 @@
                 android:hint="@string/password_field_hint"
                 android:background="#CCCCCC"
                 android:layout_marginTop="20dp"
-                android:padding="5dp" />
+                android:padding="5dp"
+                android:inputType="textPassword" />
 
             <Button
                 android:layout_width="match_parent"

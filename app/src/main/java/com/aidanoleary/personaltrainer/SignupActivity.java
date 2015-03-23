@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,8 +58,8 @@ public class SignupActivity extends Activity {
         mLoginText = (TextView) findViewById(R.id.signupLoginText);
 
         // Set the signup screen logo
-        ImageView exerciseImage = (ImageView) findViewById(R.id.signupLogoImage);
-        exerciseImage.setImageResource(R.drawable.placeholder_image);
+        // ImageView exerciseImage = (ImageView) findViewById(R.id.signupLogoImage);
+        // exerciseImage.setImageResource(R.drawable.logo1);
 
         //Add an onclick listener for the signup button
         mSignupButton.setOnClickListener(new View.OnClickListener() {
@@ -94,6 +93,8 @@ public class SignupActivity extends Activity {
                     else {
                         //Set the loading spinner to visible
                         setProgressBarIndeterminateVisibility(true);
+                        mSignupButton.setText("Logging in...");
+                        mSignupButton.setClickable(false);
                         new SignupTask().execute(signupUrl);
                         setProgressBarIndeterminateVisibility(false);
 
@@ -203,10 +204,14 @@ public class SignupActivity extends Activity {
                     }
                     else {
                         Toast.makeText(SignupActivity.this, jsonObject.getString("info"), Toast.LENGTH_LONG).show();
+                        mSignupButton.setText("Signup");
+                        mSignupButton.setClickable(true);
                     }
                 }
                 else {
                     Toast.makeText(SignupActivity.this, jsonObject.getString("error"), Toast.LENGTH_LONG).show();
+                    mSignupButton.setText("Signup");
+                    mSignupButton.setClickable(true);
                 }
             } catch (Exception e) {
                 // Show a toast displaying what went wrong
