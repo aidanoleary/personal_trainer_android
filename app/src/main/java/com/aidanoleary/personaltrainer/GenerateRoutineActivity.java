@@ -567,8 +567,11 @@ public class GenerateRoutineActivity extends Activity {
         User user = new User();
         SharedPreferences preferences = this.getSharedPreferences("CurrentUser", this.MODE_PRIVATE);
         String userEmail = preferences.getString("Email", "");
+        String userToken = preferences.getString("AuthToken", "");
         user.setEmail(userEmail);
         Log.v(TAG, "Users email is: " + user.getEmail());
+        user.setAuthorizationToken(userToken);
+        Log.v(TAG, "User's token is: " + user.getAuthorizationToken());
         user.setAge(usersAge);
         user.setHeight(usersHeight);
         user.setWeight(usersWeight);

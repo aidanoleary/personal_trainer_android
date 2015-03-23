@@ -150,6 +150,8 @@ public class DBAdapter {
         initialValues.put("authentication_token", user.getAuthorizationToken());
         initialValues.put("age", user.getAge());
         initialValues.put("gender", user.getGender());
+        initialValues.put("weight", user.getWeight());
+        initialValues.put("height", user.getHeight());
         initialValues.put("routine_id", user.getRoutine().getId());
         return db.insert("user", null, initialValues);
     }
@@ -303,11 +305,14 @@ public class DBAdapter {
         // Check if the user already exists in the database
         if(isDataInDb("user", "email", "'" + user.getEmail() + "'")) {
             // User exists so just update his current routine.
+            Log.v(TAG, "User already exists in the database");
             return 0;
         }
         else {
             // The user doesn't exist in the local database so add him.
+            Log.v(TAG, "User doesn't exist in the database, so he will be added.");
             return insertUser(user);
+
         }
 
     }
