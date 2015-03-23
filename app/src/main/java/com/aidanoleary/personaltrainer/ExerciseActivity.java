@@ -48,7 +48,6 @@ public class ExerciseActivity extends Activity {
         TextView equipmentText = (TextView) findViewById(R.id.exerciseEquipmentText);
         equipmentText.setText(equipmentText.getText() + exercise.getEquipment());
 
-
         // Set the type text
         TextView typeText = (TextView) findViewById(R.id.exerciseTypeText);
         typeText.setText(typeText.getText() + exercise.getType());
@@ -57,18 +56,17 @@ public class ExerciseActivity extends Activity {
         TextView mechanicsText = (TextView) findViewById(R.id.exerciseMechanicsText);
         mechanicsText.setText(mechanicsText.getText() + exercise.getMechanics());
 
-        // ============================= Continue here 000000000000000000
-        // TODO finish this part of the exercise activity
-
         // Set the description text
+        TextView descriptionText = (TextView) findViewById(R.id.exerciseDescriptionText);
+        descriptionText.setText(exercise.getDescription());
 
         // Set the weight
+        TextView weightText = (TextView) findViewById(R.id.exerciseWeightText);
+        weightText.setText(weightText.getText().toString() + exercise.getWeight());
 
         // Set the sets and reps
-
-
-
-
+        TextView setAndRepsText = (TextView) findViewById(R.id.exerciseSetsAndRepsText);
+        setAndRepsText.setText("Sets: " + exercise.getSets() + " / " + "Reps: " + exercise.getReps());
 
         // Set the image view
         ImageView exerciseImage = (ImageView) findViewById(R.id.exerciseImage);

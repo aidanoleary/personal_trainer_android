@@ -150,7 +150,7 @@ public class DBAdapter {
         initialValues.put("authentication_token", user.getAuthorizationToken());
         initialValues.put("age", user.getAge());
         initialValues.put("gender", user.getGender());
-        initialValues.put("routine_id", user.getRoutineId());
+        initialValues.put("routine_id", user.getRoutine().getId());
         return db.insert("user", null, initialValues);
     }
 
@@ -175,7 +175,7 @@ public class DBAdapter {
 
     // Insert a workout_exercise
     // ==========
-    public long insertWorkoutExercise(int workoutId, int exerciseId) {
+    public long insertWorkoutExercise(long workoutId, long exerciseId) {
         ContentValues initialValues = new ContentValues();
         initialValues.put("workout_id", workoutId);
         initialValues.put("exercise_id", exerciseId);
@@ -265,6 +265,53 @@ public class DBAdapter {
         return db.insert("user_workout", null, initialValues);
     }
 
+    // Insert a user and their routine
+    // ===================
+
+    // This will be used when first inserting a user into the database after they have signed up.
+    // And also when the user generates a new workout.
+    public long insertUserAndRoutine(User user) {
+
+        // Insert the routine and get it's ID
+        long routineId = insertRoutine(user.getRoutine());
+        user.getRoutine().setId(routineId);
+
+        // Create a variable to store the workout's ID's
+        long currentWorkoutId = 0;
+
+        // Insert the workouts and the workout exercises
+        for(Workout workout : user.getRoutine().getWorkouts()) {
+
+            // Set the routine ID of each workout
+            workout.setRoutineId(routineId);
+
+            // Insert the workout and get it's current workouts ID
+            currentWorkoutId = insertWorkout(workout);
+
+            // For each exercise in the workout insert a workout exercise relationship
+            for(Exercise exercise : workout.getExerciseList()) {
+                insertWorkoutExercise(currentWorkoutId, exercise.getId());
+            }
+        }
+
+        // Insert the user, or change his current workout.
+        // TODO later on it should also delete the users current workout.
+
+        //Set the users routine ID to the current routine
+
+
+        // Check if the user already exists in the database
+        if(isDataInDb("user", "email", "'" + user.getEmail() + "'")) {
+            // User exists so just update his current routine.
+            return 0;
+        }
+        else {
+            // The user doesn't exist in the local database so add him.
+            return insertUser(user);
+        }
+
+    }
+
 
 
     // Retrieving items from the database
@@ -288,7 +335,7 @@ public class DBAdapter {
 
                 currentExercise = new Exercise();
 
-                currentExercise.setId(mCursor.getInt(mCursor.getColumnIndex("id")));
+                currentExercise.setId(mCursor.getLong(mCursor.getColumnIndex("id")));
                 currentExercise.setName(mCursor.getString(mCursor.getColumnIndex("name")));
                 currentExercise.setServerId(mCursor.getInt(mCursor.getColumnIndex("server_id")));
                 currentExercise.setDescription(mCursor.getString(mCursor.getColumnIndex("description")));

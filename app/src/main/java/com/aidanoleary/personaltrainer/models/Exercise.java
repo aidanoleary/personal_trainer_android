@@ -5,7 +5,7 @@ package com.aidanoleary.personaltrainer.models;
  */
 public class Exercise {
 
-    private int id;
+    private long id;
     private int serverId;
     private String name;
     private String description;
@@ -59,7 +59,7 @@ public class Exercise {
     }
 
     // Setters
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -117,7 +117,7 @@ public class Exercise {
 
 
     // Getters
-    public int getId() {
+    public long getId() {
         return id;
     }
 

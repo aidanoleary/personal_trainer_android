@@ -2,6 +2,7 @@ package com.aidanoleary.personaltrainer;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -18,12 +19,14 @@ import android.widget.Toast;
 
 import com.aidanoleary.personaltrainer.helpers.DBAdapter;
 import com.aidanoleary.personaltrainer.models.Exercise;
+import com.aidanoleary.personaltrainer.models.MainSingleton;
 import com.aidanoleary.personaltrainer.models.Routine;
 import com.aidanoleary.personaltrainer.models.User;
 import com.aidanoleary.personaltrainer.models.Workout;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 
@@ -262,8 +265,8 @@ public class GenerateRoutineActivity extends Activity {
 
                     default:
                         // Create the users workout depending on the variables that have been
-                        // generated.
-                        generateTheRoutine();
+                        // generated, Then set the main singleton to this user.
+                        MainSingleton.setUser(generateTheRoutine());
 
                         // Update the Database
 
@@ -369,13 +372,6 @@ public class GenerateRoutineActivity extends Activity {
     // Generate workout method - the logic :-)
     // ================
     private User generateTheRoutine() {
-
-        // Create the user
-        User user = new User();
-        user.setAge(usersAge);
-        user.setHeight(usersHeight);
-        user.setWeight(usersWeight);
-        user.setGender(usersGender);
 
         // Make changes dependent on the users goal
         // ==============
@@ -518,95 +514,75 @@ public class GenerateRoutineActivity extends Activity {
 
             case 5:
 
+                //day 1 = chest
+                //day 2 = back
+                //day 3 = tris and bis
+                //day 4 = legs and abs
+                //day 5 = shoulders
+
                 // Get the routines workouts
                 musclesAndDays = new String[][] {{"chest"}, {"back"}, {"triceps", "biceps"}, {"legs", "abs"}, {"shoulders"}};
                 routine = new Routine("My Routine", "This is my custom routine", getRoutinesWorkouts(musclesAndDays));
                 Log.v(TAG, "case 5 routine, workout 1, exercise 1: " + routine.getWorkouts().get(0).getExercise(0).getName());
 
-                // Create a multidimensional array of muscles and days.
-                /*
-                String[][] musclesAndDays = new String[][] {{"chest"}, {"back"}, {"triceps", "biceps"}, {"legs", "abs"}, {"shoulders"}};
-
-                String workoutName = "";
-
-                for(int i = 0; i < musclesAndDays.length; i++) {
-                    exercises = getDaysExercises(musclesAndDays[i]);
-                    workoutName = musclesAndDays[i].toString();
-                    Log.v(TAG, "The workout name 55555 is: " + workoutName);
-                    workouts.add(new Workout(workoutName, workoutDays.get(i), exercises));
-                }
-                routine = new Routine("My Routine", "This is my custom routine", workouts);
-                */
-
-                /*
-                //day 1 = chest
-                getDaysExercises(new String[] {"chest"});
-
-                //day 2 = back
-                getDaysExercises(new String[] {"back"});
-
-                //day 3 = tris and bis
-                getDaysExercises(new String[] {"triceps", "biceps"});
-
-                //day 4 = legs and abs
-                getDaysExercises(new String[] {"legs", "abs"});
-
-                //day 5 = shoulders
-                getDaysExercises(new String[] {"shoulders"});
-                */
-
-
-
                 break;
 
             case 6:
                 //day 1 = chest
-                getDaysExercises(new String[] {"chest"});
-
                 //day 2 = back
-                getDaysExercises(new String[] {"back"});
-
                 //day 3 = tris and bis
-                getDaysExercises(new String[] {"triceps", "biceps"});
-
                 //day 4 = legs and abs
-                getDaysExercises(new String[] {"legs", "abs"});
-
                 //day 5 = shoulders
-                getDaysExercises(new String[] {"shoulders"});
-
                 //day 6 = chest
-                getDaysExercises(new String[] {"chest"});
+
+                // Get the routines workouts
+                musclesAndDays = new String[][] {{"chest"}, {"back"}, {"triceps", "biceps"}, {"legs", "abs"}, {"shoulders"}, {"chest"}};
+                routine = new Routine("My Routine", "This is my custom routine", getRoutinesWorkouts(musclesAndDays));
+                Log.v(TAG, "case 6 routine, workout 1, exercise 1: " + routine.getWorkouts().get(0).getExercise(0).getName());
 
                 break;
 
             case 7:
                 //day 1 = chest
-                getDaysExercises(new String[] {"chest"});
-
                 //day 2 = back
-                getDaysExercises(new String[] {"back"});
-
                 //day 3 = tris and bis
-                getDaysExercises(new String[] {"triceps", "biceps"});
-
                 //day 4 = legs and abs
-                getDaysExercises(new String[] {"legs", "abs"});
-
                 //day 5 = shoulders
-                getDaysExercises(new String[] {"shoulders"});
-
                 //day 6 = chest
-                getDaysExercises(new String[] {"chest"});
-
                 //day 7 = back
-                getDaysExercises(new String[] {"back"});
 
+                musclesAndDays = new String[][] {{"chest"}, {"back"}, {"triceps", "biceps"}, {"legs", "abs"}, {"shoulders"}, {"chest"}, {"back"}};
+                routine = new Routine("My Routine", "This is my custom routine", getRoutinesWorkouts(musclesAndDays));
+                Log.v(TAG, "case 7 routine, workout 1, exercise 1: " + routine.getWorkouts().get(0).getExercise(0).getName());
+
+                break;
+            default:
+                // Change this to deal with an error, although this error is logically impossible
+                // TODO change this later
+                routine = new Routine();
                 break;
         }
 
+        // Create the user
+        User user = new User();
+        SharedPreferences preferences = this.getSharedPreferences("CurrentUser", this.MODE_PRIVATE);
+        String userEmail = preferences.getString("Email", "");
+        user.setEmail(userEmail);
+        Log.v(TAG, "Users email is: " + user.getEmail());
+        user.setAge(usersAge);
+        user.setHeight(usersHeight);
+        user.setWeight(usersWeight);
+        user.setGender(usersGender);
+        user.setRoutine(routine);
 
-
+        // insert the user into the database
+        try {
+            db.open();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        db.insertUserAndRoutine(user);
+        db.close();
 
         return user;
 
@@ -721,7 +697,7 @@ public class GenerateRoutineActivity extends Activity {
 
         for(int i = 0; i < musclesAndDays.length; i++) {
             currentExercises = getDaysExercises(musclesAndDays[i]);
-            workoutName = musclesAndDays[i].toString();
+            workoutName = Arrays.toString(musclesAndDays[i]);
             Log.v(TAG, "The workout name 55555 is: " + workoutName);
             workouts.add(new Workout(workoutName, workoutDays.get(i), currentExercises));
         }

@@ -7,8 +7,8 @@ import java.util.ArrayList;
  */
 public class Workout {
 
-    private int id;
-    private int routineId;
+    private long id;
+    private long routineId;
     private String name;
     private String description;
     private String day;
@@ -28,7 +28,7 @@ public class Workout {
         this.exercises = exercises;
     }
 
-    public Workout(int id, String name, String day, ArrayList<Exercise> exercises) {
+    public Workout(long id, String name, String day, ArrayList<Exercise> exercises) {
         this.id = id;
         this.name = name;
         this.day = day;
@@ -36,11 +36,11 @@ public class Workout {
     }
 
     // Setter
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public void setRoutineId(int routineId) {
+    public void setRoutineId(long routineId) {
         this.routineId = routineId;
     }
 
@@ -57,11 +57,11 @@ public class Workout {
     }
 
     // Getters
-    public int getId() {
+    public long getId() {
         return this.id;
     }
 
-    public int getRoutineId() {
+    public long getRoutineId() {
         return routineId;
     }
 

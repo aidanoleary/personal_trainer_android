@@ -13,7 +13,8 @@
         android:text="Exercise Name"
         android:id="@+id/exerciseTitleText"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="20dp" />
+        android:layout_marginBottom="20dp"
+        android:textSize="18sp" />
 
     <RelativeLayout
         android:layout_width="fill_parent"

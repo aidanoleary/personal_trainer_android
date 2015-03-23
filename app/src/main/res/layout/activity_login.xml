@@ -60,8 +60,8 @@
                 android:layout_below="@+id/loginPasswordField"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dp"
-                android:background="#696969"
-                android:textColor="#ffffffff" />
+                android:textColor="#ffffffff"
+                android:clickable="false" />
 
             <TextView
                 android:layout_width="wrap_content"

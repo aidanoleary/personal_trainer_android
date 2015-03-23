@@ -7,10 +7,14 @@ import java.util.ArrayList;
  */
 public class Routine {
 
-    private int id;
+    private long id;
     private String name;
     private String description;
     private ArrayList<Workout> workouts;
+
+    public Routine() {
+
+    }
 
     public Routine(String name, String description, ArrayList<Workout> workouts) {
         this.name = name;
@@ -19,7 +23,7 @@ public class Routine {
     }
 
     // Setters
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -37,7 +41,7 @@ public class Routine {
 
 
     // Getters
-    public int getId() {
+    public long getId() {
         return id;
     }
 

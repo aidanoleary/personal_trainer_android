@@ -97,10 +97,6 @@ public class User {
         return this.id;
     }
 
-    public int getRoutineId() {
-        return routine.getId();
-    }
-
     public String getEmail() {
         return this.email;
     }

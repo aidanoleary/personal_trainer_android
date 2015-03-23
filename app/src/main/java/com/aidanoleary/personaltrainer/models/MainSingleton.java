@@ -68,12 +68,12 @@ public class MainSingleton {
     // ---- getters -----
 
     public User getUser() {
-        return mUser;
+        return sMainSingleton.mUser;
     }
 
 
     // ---- setters -----
-    public void setUser(User mUser) {
-        this.mUser = mUser;
+    public static void setUser(User mUser) {
+        sMainSingleton.mUser = mUser;
     }
 }
