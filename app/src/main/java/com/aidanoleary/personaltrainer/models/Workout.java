@@ -16,6 +16,10 @@ public class Workout {
 
 
     // Constructors for the workout class
+    public Workout() {
+
+    }
+
     public Workout(String name, String description, String day) {
         this.name = name;
         this.description = description;

@@ -5,7 +5,7 @@ package com.aidanoleary.personaltrainer.models;
  * A model for the User
  */
 public class User {
-    private int id;
+    private long id;
     private String email;
     private int age;
     private String gender;
@@ -52,7 +52,7 @@ public class User {
     }
 
     // setters
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

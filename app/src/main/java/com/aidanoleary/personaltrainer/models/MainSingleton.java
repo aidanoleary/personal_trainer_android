@@ -3,6 +3,9 @@ package com.aidanoleary.personaltrainer.models;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.aidanoleary.personaltrainer.helpers.DBAdapter;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -17,38 +20,61 @@ public class MainSingleton {
     private Context mAppContext;
     private SharedPreferences mSharedPreferences;
     private User mUser;
+    private DBAdapter db;
 
     private MainSingleton(Context appContext) {
         mAppContext = appContext;
         //mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(appContext);
 
         mSharedPreferences = appContext.getSharedPreferences("CurrentUser", Context.MODE_PRIVATE);
+        db = new DBAdapter(appContext);
 
         // Initialise all the components of the main data structure.
         //mUser.setEmail(mSharedPreferences.getString("Email", ""));
 
 
-        // Create 6 exercises
-        ArrayList<Exercise> exercises = new ArrayList<Exercise>();
-        for (int i = 0; i < 6; i++) {
-            exercises.add(new Exercise("test exercise " + i));
+        // Check if the currently signed in user exists in the database.
+        // TODO this is going to make the program crash if the exercises have not been loaded into the database.
+
+
+
+        try {
+            db.open();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
-        // Create 3 workouts and exercises to them
-        ArrayList<Workout> workouts = new ArrayList<Workout>();
-        for (int i = 0; i < 6; i++) {
-            workouts.add(new Workout("test workout " + i, "test description " + i, "day " + i));
-            workouts.get(i).addExerciseList(exercises);
+        if(db.isDataInDb("user", "email", mSharedPreferences.getString("Email", ""))) {
+
+            // Get the user and their routine from the database and load it to current user object.
+
+
+
+        }
+        else {
+            // Create 6 exercises
+            ArrayList<Exercise> exercises = new ArrayList<Exercise>();
+            for (int i = 0; i < 6; i++) {
+                exercises.add(new Exercise("test exercise " + i));
+            }
+
+            // Create 3 workouts and exercises to them
+            ArrayList<Workout> workouts = new ArrayList<Workout>();
+            for (int i = 0; i < 6; i++) {
+                workouts.add(new Workout("test workout " + i, "test description " + i, "day " + i));
+                workouts.get(i).addExerciseList(exercises);
+            }
+
+
+            // create a routine and add workouts to it
+            Routine routine = new Routine("Workout routine 1", "This is the description of the routine", workouts);
+            mUser = new User(mSharedPreferences.getString("Email", ""), mSharedPreferences.getString("AuthToken", ""), 22, "male", routine, 100);
+            mUser.setAuthorizationToken(mSharedPreferences.getString("AuthToken", ""));
+
+            // Change this to use the data in the sqlite database
         }
 
-
-        // create a routine and add workouts to it
-        Routine routine = new Routine("Workout routine 1", "This is the description of the routine", workouts);
-        mUser = new User(mSharedPreferences.getString("Email", ""), mSharedPreferences.getString("AuthToken", ""), 22, "male", routine, 100);
-        mUser.setAuthorizationToken(mSharedPreferences.getString("AuthToken", ""));
-
-        // Change this to use the data in the sqlite database
-
+        db.close();
     }
 
     public static MainSingleton get(Context c) {

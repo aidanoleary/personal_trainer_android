@@ -92,9 +92,6 @@ public class GenerateRoutineActivity extends Activity {
 
 
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
