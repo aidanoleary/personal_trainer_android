@@ -17,7 +17,12 @@ public class Workout {
 
     // Constructors for the workout class
     public Workout() {
-
+        this.id = 0;
+        this.routineId = 0;
+        this.name = "";
+        this.description = "";
+        this.day = "";
+        this.exercises = new ArrayList<Exercise>();
     }
 
     public Workout(String name, String description, String day) {

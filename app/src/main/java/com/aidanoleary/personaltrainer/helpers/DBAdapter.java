@@ -411,15 +411,11 @@ public class DBAdapter {
             user.setGender(mCursor.getString(mCursor.getColumnIndex("gender")));
             user.setHeight(mCursor.getDouble(mCursor.getColumnIndex("height")));
             user.setWeight(mCursor.getDouble(mCursor.getColumnIndex("weight")));
-            user.setPoints(mCursor.getInt(mCursor.getColumnIndex("points")));
+            //user.setPoints(mCursor.getInt(mCursor.getColumnIndex("points")));
 
             // Get the users routine
-            Routine usersRoutine = new Routine();
-            long routineId = mCursor.getLong(mCursor.getColumnIndex("routine_id"));
-            selectQuery = "SELECT * FROM routine WHERE id = " + routineId;
-            mCursor = db.rawQuery(selectQuery, null);
-            //usersRoutine.set
-
+            Routine routine = getRoutine(mCursor.getLong(mCursor.getColumnIndex("routine_id")));
+            user.setRoutine(routine);
 
         }
         return user;
@@ -447,10 +443,86 @@ public class DBAdapter {
 
             // Retrieve the workout's exercises
             //selectQuery = "SELECT * FROM exercise, workout_exercise, workout WHERE "
-            // TODO continue here tomorrow as someone who does databases about this.
+
+            // Create a query to retrieve the exercises
+            selectQuery = "SELECT exercise.* FROM exercise " +
+                          "JOIN workout_exercise ON exercise.id = workout_exercise.exercise_id " +
+                          "JOIN workout ON workout.id = workout_exercise.workout_id " +
+                          "WHERE workout.id = " + workout.getId();
+
+
+            mCursor = db.rawQuery(selectQuery, null);
+
+            // Check if the cursor has returned results
+            if(mCursor != null) {
+                //Move to the first element of the returned results.
+                mCursor.moveToFirst();
+                Exercise currentExercise;
+                //Loop through the retrieved results adding the exercises to the workout.
+                for(int i = 0; i < mCursor.getCount(); i++) {
+
+                    currentExercise = new Exercise();
+
+                    currentExercise.setId(mCursor.getLong(mCursor.getColumnIndex("id")));
+                    currentExercise.setName(mCursor.getString(mCursor.getColumnIndex("name")));
+                    currentExercise.setServerId(mCursor.getInt(mCursor.getColumnIndex("server_id")));
+                    currentExercise.setDescription(mCursor.getString(mCursor.getColumnIndex("description")));
+                    currentExercise.setLevel(mCursor.getString(mCursor.getColumnIndex("level")));
+                    currentExercise.setMainMuscle(mCursor.getString(mCursor.getColumnIndex("main_muscle")));
+                    currentExercise.setOtherMuscles(mCursor.getString(mCursor.getColumnIndex("other_muscles")));
+                    currentExercise.setEquipment(mCursor.getString(mCursor.getColumnIndex("equipment")));
+                    currentExercise.setType(mCursor.getString(mCursor.getColumnIndex("type")));
+                    currentExercise.setMechanics(mCursor.getString(mCursor.getColumnIndex("mechanics")));
+                    currentExercise.setImageUrl(mCursor.getString(mCursor.getColumnIndex("image_url")));
+                    currentExercise.setWeight(mCursor.getDouble(mCursor.getColumnIndex("weight")));
+                    //currentExercise.setSets(mCursor.getInt(mCursor.getColumnIndex("sets")));
+                    //currentExercise.setReps(mCursor.getInt(mCursor.getColumnIndex("reps")));
+
+                    workout.addExercise(currentExercise);
+                    mCursor.moveToNext();
+                }
+            }
+
         }
 
+        // Return the workout
+        return workout;
+    }
 
+    // Retrieve a routine including it's workouts and exercises
+    public Routine getRoutine(long id) {
+
+        // Create a new routine
+        Routine routine = new Routine();
+
+        // Retrieve the routine's information
+        String selectQuery = "SELECT * FROM routine WHERE id = " + id;
+
+        Cursor mCursor = db.rawQuery(selectQuery, null);
+        if(mCursor != null) {
+
+            mCursor.moveToFirst();
+
+            routine.setId(mCursor.getLong(mCursor.getColumnIndex("id")));
+            Log.v(TAG, "routine id is: " + routine.getId());
+            routine.setName(mCursor.getString(mCursor.getColumnIndex("name")));
+            routine.setDescription(mCursor.getString(mCursor.getColumnIndex("description")));
+
+            selectQuery = "SELECT * FROM workout WHERE routine_id = " + routine.getId();
+            mCursor = db.rawQuery(selectQuery, null);
+
+            if(mCursor != null) {
+
+                mCursor.moveToFirst();
+
+                for(int i = 0; i < mCursor.getCount(); i++) {
+                    routine.addWorkout(getWorkout(mCursor.getLong(mCursor.getColumnIndex("id"))));
+                    mCursor.moveToNext();
+                }
+            }
+        }
+
+        return routine;
     }
 
 

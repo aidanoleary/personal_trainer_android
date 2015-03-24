@@ -13,7 +13,10 @@ public class Routine {
     private ArrayList<Workout> workouts;
 
     public Routine() {
-
+        this.id = 0;
+        this.name = "";
+        this.description = "";
+        this.workouts = new ArrayList<Workout>();
     }
 
     public Routine(String name, String description, ArrayList<Workout> workouts) {

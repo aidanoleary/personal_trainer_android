@@ -22,7 +22,19 @@ public class Exercise {
 
     // Constructors for the Exercise class
     public Exercise() {
-
+        this.name = "";
+        this.id = 0;
+        this.description = "";
+        this.level = "";
+        this.mainMuscle = "";
+        this.otherMuscles = "";
+        this.equipment = "";
+        this.type = "";
+        this.mechanics = "";
+        this.imageUrl = "";
+        this.weight = 0;
+        this.reps = 0;
+        this.sets = 0;
     }
 
     public Exercise(String name) {
