@@ -15,7 +15,9 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="exercise name"
         android:id="@+id/exerciseNameText"
-        android:layout_alignParentLeft="true"/>
+        android:layout_alignParentLeft="true"
+        android:textSize="12sp"
+        android:maxWidth="170dp" />
 
     <TextView
         android:layout_width="wrap_content"

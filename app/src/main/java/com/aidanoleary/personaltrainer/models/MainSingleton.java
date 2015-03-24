@@ -54,6 +54,7 @@ public class MainSingleton {
         }
         else {
             // Create 6 exercises
+
             ArrayList<Exercise> exercises = new ArrayList<Exercise>();
             for (int i = 0; i < 6; i++) {
                 exercises.add(new Exercise("test exercise " + i));
@@ -73,6 +74,8 @@ public class MainSingleton {
             mUser.setAuthorizationToken(mSharedPreferences.getString("AuthToken", ""));
 
             // Change this to use the data in the sqlite database
+            //Intent intent = new Intent(appContext, GenerateRoutineActivity.class);
+            //appContext.startActivity(intent);
         }
 
         db.close();

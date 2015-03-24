@@ -1,6 +1,7 @@
 package com.aidanoleary.personaltrainer;
 
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -62,6 +63,31 @@ public class WorkoutFragment extends Fragment {
         // Check if the exercises have been added if not download them and add them from the server
         addExercisesIfEmpty();
 
+
+        // Check if the user already exists if they don't send them to Generate routine activity
+        /*
+        try {
+            db.open();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if(db.isDataInDb("user", "email", "'" + getActivity().getSharedPreferences("CurrentUser", getActivity().MODE_PRIVATE).getString("Email", "") + "'")) {
+            // User does exist in the database.
+            db.close();
+
+            // Get the Current User object from the MainSingleton
+            currentUser = MainSingleton.get(getActivity()).getUser();
+
+        }
+        else {
+
+            db.close();
+
+            Intent intent = new Intent(getActivity(), GenerateRoutineActivity.class);
+            startActivity(intent);
+        }
+        */
+
         // Get the Current User object from the MainSingleton
         currentUser = MainSingleton.get(getActivity()).getUser();
 
@@ -113,7 +139,8 @@ public class WorkoutFragment extends Fragment {
         return rootView;
     }
 
-    // A method that checks if the exercises have been added to the sqlite database and if they haven't add them.
+    // A method that checks if the exercises have been added to the sqlite database and if they haven't adds them
+    // from the server.
     private void addExercisesIfEmpty() {
         // ==================
         // Run this the first time the app is run
@@ -122,6 +149,8 @@ public class WorkoutFragment extends Fragment {
         // Check if exercises have been added
         // if they haven't run a async task to get the exercises from the server and load them into the database
         db = new DBAdapter(getActivity());
+
+        // TODO MAYBe change the initial value of this to false, we will see.
         Boolean isExercisesEmpty = true;
         try {
             db.open();
@@ -131,6 +160,7 @@ public class WorkoutFragment extends Fragment {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         // If the exercise table is empty use async task to populate it with exercises from the
         // webserver
         if(isExercisesEmpty) {
@@ -153,8 +183,20 @@ public class WorkoutFragment extends Fragment {
     // and upload them to local sqlite database
     private class GetExercisesTask extends AsyncTask<String, Void, String> {
 
+        private final ProgressDialog dialog = new ProgressDialog(getActivity());
+
+
+        // Make a progress dialog appear when the task starts, so user has to wait for completion.
+        protected void onPreExecute() {
+            dialog.setTitle("Downloading Exercises");
+            dialog.setMessage("Loading...");
+            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            dialog.show();
+        }
+
         @Override
         protected String doInBackground(String... urls) {
+
             StringBuilder stringBuilder = new StringBuilder();
             HttpClient httpClient = new DefaultHttpClient();
             HttpGet httpGet = new HttpGet(urls[0]);
@@ -244,6 +286,8 @@ public class WorkoutFragment extends Fragment {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+
+            dialog.dismiss();
         }
     }
 }

@@ -141,6 +141,7 @@ public class DBAdapter {
 
     // Inserting items into the database
     // =================================
+    // ****************
 
     // Insert a user into the database
     // ==========
@@ -242,21 +243,6 @@ public class DBAdapter {
         return db.insert("user_workout", null, initialValues);
     }
 
-
-    // Insert a user_workout_exercise
-    // ==================
-    /*
-    public long insertUserWorkoutExercise(int userWorkoutId, int exerciseId, int numberOfReps, int numberOfSets, double weight) {
-        ContentValues initialValues = new ContentValues();
-        initialValues.put("user_workout_id", userWorkoutId);
-        initialValues.put("exercise_id", exerciseId);
-        initialValues.put("number_of_reps", numberOfReps);
-        initialValues.put("number_of_sets", numberOfSets);
-        initialValues.put("weight", weight);
-        return db.insert("user_workout", null, initialValues);
-    }
-    */
-
     public long insertUserWorkoutExercise(UserWorkoutExercise userWorkoutExercise) {
         ContentValues initialValues = new ContentValues();
         initialValues.put("user_workout_id", userWorkoutExercise.getUserWorkoutId());
@@ -272,55 +258,80 @@ public class DBAdapter {
 
     // This will be used when first inserting a user into the database after they have signed up.
     // And also when the user generates a new workout.
-    public long insertUserAndRoutine(User user) {
-
-        // Insert the routine and get it's ID
-        long routineId = insertRoutine(user.getRoutine());
-        user.getRoutine().setId(routineId);
-
-        // Create a variable to store the workout's ID's
-        long currentWorkoutId = 0;
-
-        // Insert the workouts and the workout exercises
-        for(Workout workout : user.getRoutine().getWorkouts()) {
-
-            // Set the routine ID of each workout
-            workout.setRoutineId(routineId);
-
-            // Insert the workout and get it's current workouts ID
-            currentWorkoutId = insertWorkout(workout);
-
-            // For each exercise in the workout insert a workout exercise relationship
-            for(Exercise exercise : workout.getExerciseList()) {
-                insertWorkoutExercise(currentWorkoutId, exercise.getId());
-            }
-        }
-
-        // Insert the user, or change his current workout.
-        // TODO later on it should also delete the users current workout.
-
-        //Set the users routine ID to the current routine
-
+    public void insertUserAndRoutine(User user) {
 
         // Check if the user already exists in the database
         if(isDataInDb("user", "email", "'" + user.getEmail() + "'")) {
             // User exists so just update his current routine.
             Log.v(TAG, "User already exists in the database");
-            return 0;
-        }
-        else {
-            // The user doesn't exist in the local database so add him.
-            Log.v(TAG, "User doesn't exist in the database, so he will be added.");
-            return insertUser(user);
 
         }
+
+        else {
+            // The user doesn't exist in the local database so add him and his routine.
+            Log.v(TAG, "User doesn't exist in the database, so he will be added.");
+
+            // Insert the routine and get it's ID
+            long routineId = insertRoutine(user.getRoutine());
+            user.getRoutine().setId(routineId);
+
+            // Insert the user then add his Id to the user object.
+            user.setId(insertUser(user));
+
+            // Create a variable to store the workout's ID's
+            long currentWorkoutId = 0;
+
+            // Insert the workouts and the workout exercises
+            for(Workout workout : user.getRoutine().getWorkouts()) {
+
+                // Set the routine ID of each workout
+                workout.setRoutineId(routineId);
+
+                // Insert the workout and get it's current workouts ID
+                currentWorkoutId = insertWorkout(workout);
+
+                // For each exercise in the workout insert a workout exercise relationship
+                // Also insert a user exercise relationship to store the current weight, reps and sets
+                // for that user
+                for(Exercise exercise : workout.getExerciseList()) {
+                    insertWorkoutExercise(currentWorkoutId, exercise.getId());
+                    insertUserExercise(user, exercise);
+                }
+            }
+
+            Log.v(TAG, "User and routine has been successfully added");
+
+        }
+
+
+
 
     }
+
+    // Insert a user's exercise including their reps and sets
+    // This table is used to keep track of a users progress on a particular exercise.
+    // ===================
+    public long insertUserExercise(User user, Exercise exercise) {
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put("user_id", user.getId());
+        initialValues.put("exercise_id", exercise.getId());
+        initialValues.put("weight", exercise.getWeight());
+        initialValues.put("reps", exercise.getReps());
+        initialValues.put("sets", exercise.getSets());
+        return db.insert("user_exercise", null, initialValues);
+
+    }
+
+
+    // TODO continue here add the update user and routine
+    // public long insert
 
 
 
     // Retrieving items from the database
     // ==================================
+    // *****************
 
     // Retrieve an Arraylist of all the exercises for a particular muscle group
     public ArrayList<Exercise> getExercisesByMainMuscle(String mainMuscle) {
@@ -417,6 +428,18 @@ public class DBAdapter {
             Routine routine = getRoutine(mCursor.getLong(mCursor.getColumnIndex("routine_id")));
             user.setRoutine(routine);
 
+            // Get the user's individual exercise weights, reps, and sets.
+            // Couldn't avoid the double loop.
+            for(Workout workout : routine.getWorkouts()) {
+
+                for(Exercise exercise: workout.getExerciseList()) {
+                    // Pass in the current exercise and then return it from the function with the correct
+                    // weight's, reps, and sets for the user.
+                    exercise = getUserExerciseData(user, exercise);
+
+                }
+            }
+
         }
         return user;
     }
@@ -474,7 +497,7 @@ public class DBAdapter {
                     currentExercise.setType(mCursor.getString(mCursor.getColumnIndex("type")));
                     currentExercise.setMechanics(mCursor.getString(mCursor.getColumnIndex("mechanics")));
                     currentExercise.setImageUrl(mCursor.getString(mCursor.getColumnIndex("image_url")));
-                    currentExercise.setWeight(mCursor.getDouble(mCursor.getColumnIndex("weight")));
+                    // currentExercise.setWeight(mCursor.getDouble(mCursor.getColumnIndex("weight")));
                     //currentExercise.setSets(mCursor.getInt(mCursor.getColumnIndex("sets")));
                     //currentExercise.setReps(mCursor.getInt(mCursor.getColumnIndex("reps")));
 
@@ -524,6 +547,42 @@ public class DBAdapter {
 
         return routine;
     }
+
+    // Get the weight, reps , and sets of a particular exercise a user is doing.
+    // It accepts a user object and a exercise object. Then it retrieves the user_exercise information
+    // updates the exercise objects and returns it with weight, sets, and reps info.
+    public Exercise getUserExerciseData(User user, Exercise exercise) {
+
+        long userId = user.getId();
+        long exerciseId = exercise.getId();
+
+        // Retrieve the user_exercise
+        String selectQuery = "SELECT user_exercise.weight, user_exercise.reps, user_exercise.sets FROM user_exercise " +
+                             "WHERE user_exercise.user_id = " + userId + " AND user_exercise.exercise_id = " + exerciseId;
+
+        Cursor mCursor = db.rawQuery(selectQuery, null);
+        // Check if the cursor returned an entry.
+        if(mCursor != null) {
+
+            // entry was returned so proceed.
+            mCursor.moveToFirst();
+
+            // Set the passed in exercise's weight, reps, and sets.
+            exercise.setWeight(mCursor.getDouble(mCursor.getColumnIndex("weight")));
+            exercise.setReps(mCursor.getInt(mCursor.getColumnIndex("reps")));
+            exercise.setSets(mCursor.getInt(mCursor.getColumnIndex("sets")));
+
+
+        }
+        else {
+            Log.v(TAG, "getUserExerciseData() returned a null object");
+        }
+
+        // Return the passed in exercise.
+        return exercise;
+
+    }
+
 
 
 
