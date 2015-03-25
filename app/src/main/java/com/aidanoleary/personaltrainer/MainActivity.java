@@ -112,35 +112,24 @@ public class MainActivity extends Activity
             navigateToLogin();
         }
         else {
+
+            // There user is logged in so the workout fragment will load.
+
+            // Check the database to see if the user currently has a workout
             /*
-            // User is logged in.
-            // Do the things for this activity :-)
-            Log.v(TAG, "Contains AUTH TOKEN");
-            String userEmail = mPreferences.getString("Email", "");
-            String userAuthToken = mPreferences.getString("AuthToken", "");
-
-
-
             try {
                 db.open();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            if(!db.isDataInDb("user", "email", userEmail)) {
-                db.close();
-                // User doesn't exist so create the user in the database
-                // ===================
 
-
-
-
+            if(db.isDataInDb("user", "email", "'" + mPreferences.getString("Email", "") + "'")) {
+                // User data is in the database so initialise the user object.
+                //currentUser = MainSingleton.get(this).getUser();
             }
-            // If the user exists create objects for their information
-            else {
 
-            }
+            db.close();
             */
-
         }
 
     }

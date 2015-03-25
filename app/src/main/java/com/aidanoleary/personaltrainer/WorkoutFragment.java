@@ -63,6 +63,20 @@ public class WorkoutFragment extends Fragment {
         // Check if the exercises have been added if not download them and add them from the server
         addExercisesIfEmpty();
 
+        // Check if the user is logged in
+
+
+            // Check if the database has exercises
+            // If it doesn't have exercises load the exercises
+
+
+
+            // Check if the user has a workout already.
+            // If they do load their exercises.
+            // Else if they don't load exercise generator.
+
+
+
 
         // Check if the user already exists if they don't send them to Generate routine activity
         /*

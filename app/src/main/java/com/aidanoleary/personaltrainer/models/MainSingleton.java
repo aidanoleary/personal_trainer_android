@@ -76,6 +76,7 @@ public class MainSingleton {
             // Change this to use the data in the sqlite database
             //Intent intent = new Intent(appContext, GenerateRoutineActivity.class);
             //appContext.startActivity(intent);
+
         }
 
         db.close();
