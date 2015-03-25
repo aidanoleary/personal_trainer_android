@@ -32,7 +32,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -166,14 +165,12 @@ public class WorkoutFragment extends Fragment {
 
         // TODO MAYBe change the initial value of this to false, we will see.
         Boolean isExercisesEmpty = true;
-        try {
-            db.open();
-            isExercisesEmpty = db.isTableEmpty("exercise");
-            Log.v(TAG, "is exercise table empty: " + isExercisesEmpty);
-            db.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
+        db.open();
+        isExercisesEmpty = db.isTableEmpty("exercise");
+        Log.v(TAG, "is exercise table empty: " + isExercisesEmpty);
+        db.close();
+
 
         // If the exercise table is empty use async task to populate it with exercises from the
         // webserver

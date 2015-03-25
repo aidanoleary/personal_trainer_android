@@ -24,7 +24,6 @@ import com.aidanoleary.personaltrainer.models.Routine;
 import com.aidanoleary.personaltrainer.models.User;
 import com.aidanoleary.personaltrainer.models.Workout;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -576,11 +575,7 @@ public class GenerateRoutineActivity extends Activity {
         user.setRoutine(routine);
 
         // insert the user into the database
-        try {
-            db.open();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        db.open();
         db.insertUserAndRoutine(user);
         db.close();
 
@@ -627,11 +622,10 @@ public class GenerateRoutineActivity extends Activity {
         Log.v(TAG, "The total number of exercises for the day is: " + (totalExercises));
 
         ArrayList<Exercise> tempExercises = new ArrayList<Exercise>();
-        try {
-            db.open();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
+
+        // Open the local sqlite database connection
+        db.open();
 
         // Random generator used to choose a random exercise
         Random randomGenerator = new Random();
@@ -668,6 +662,8 @@ public class GenerateRoutineActivity extends Activity {
                 exercises.add(randomExercise);
             }
         }
+
+        // Close the local database connection
         db.close();
 
         // Log the chosen exercises.

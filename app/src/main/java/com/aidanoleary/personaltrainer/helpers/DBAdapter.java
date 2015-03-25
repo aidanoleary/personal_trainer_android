@@ -14,7 +14,6 @@ import com.aidanoleary.personaltrainer.models.UserWorkout;
 import com.aidanoleary.personaltrainer.models.UserWorkoutExercise;
 import com.aidanoleary.personaltrainer.models.Workout;
 
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
@@ -70,7 +69,7 @@ public class DBAdapter {
     }
 
     //---opens the database---
-    public DBAdapter open() throws SQLException {
+    public DBAdapter open() {
         db = DBHelper.getWritableDatabase();
         return this;
     }
@@ -114,11 +113,13 @@ public class DBAdapter {
     // Check if a record exists in the database
     // ===========
     public boolean isDataInDb(String tableName, String dbfield, String fieldValue) {
+        open();
         String dbQuery = "SELECT * FROM " + tableName + " WHERE " + dbfield + " = " + fieldValue;
-        Cursor cursor = db.rawQuery(dbQuery, null);
-        if(cursor.getCount() <= 0) {
-            return false;
-        }
+            Cursor cursor = db.rawQuery(dbQuery, null);
+            if(cursor.getCount() <= 0) {
+                return false;
+            }
+        close();
         return true;
     }
 
@@ -219,20 +220,6 @@ public class DBAdapter {
     // Insert a user_workout
     // ==================
 
-    // Maybe change this to use the method without an object
-    /*
-    public long insertUserWorkout(int userId, int workoutId, double timeTaken) {
-        ContentValues initialValues = new ContentValues();
-        initialValues.put("user_id", userId);
-        initialValues.put("workout_id", workoutId);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date date = new Date();
-        initialValues.put("workout_date", dateFormat.format(date));
-        initialValues.put("time_taken", timeTaken);
-        return db.insert("user_workout", null, initialValues);
-    }
-    */
-
     public long insertUserWorkout(UserWorkout userWorkout) {
         ContentValues initialValues = new ContentValues();
         initialValues.put("user_id", userWorkout.getUserId());
@@ -323,6 +310,26 @@ public class DBAdapter {
 
     }
 
+    // Update a user's exercise including their reps and sets
+    // It returns true if the user_exercise was successfully updated.
+    public boolean updateUserExercise(User user, Exercise exercise) {
+        ContentValues args = new ContentValues();
+        args.put("weight", exercise.getWeight());
+        args.put("reps", exercise.getReps());
+        args.put("sets", exercise.getSets());
+        return db.update("user_exercise", args, "user_id = " + user.getId() + " AND exercise_id = " + exercise.getId(), null) > 0;
+    }
+
+    /*
+    // --- updates a contact ---
+    public boolean updateContact(long rowId, String name, String email) {
+        ContentValues args = new ContentValues();
+        args.put(KEY_NAME, name);
+        args.put(KEY_EMAIL, email);
+        return db.update(DATABASE_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
+    }
+    */
+
 
     // TODO continue here add the update user and routine
     // public long insert
@@ -400,6 +407,8 @@ public class DBAdapter {
 
     public User getUserAndRoutine(String userEmail) {
 
+        open();
+
         // Create a user pointer
         User user = new User();
 
@@ -441,6 +450,8 @@ public class DBAdapter {
             }
 
         }
+
+        close();
         return user;
     }
 

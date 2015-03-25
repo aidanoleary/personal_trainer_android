@@ -187,10 +187,15 @@ public class Exercise {
 
 
     // A method for increasing the weight by 2.5
-    // Which is the average increase of weight in the gym
-
+    // Which is the average increase of weight in the gym.
     public void increaseWeight() {
         weight += 2.5;
+    }
+
+    // A method for decreasing the weight by 2.5
+    // Which is the average decrease of weight in the gym.
+    public void decreaseWeight() {
+        weight -= 2.5;
     }
 
 }

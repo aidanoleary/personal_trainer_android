@@ -1,23 +1,32 @@
 package com.aidanoleary.personaltrainer;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.aidanoleary.personaltrainer.helpers.DBAdapter;
 import com.aidanoleary.personaltrainer.models.Exercise;
 import com.aidanoleary.personaltrainer.models.MainSingleton;
 
 
 public class ExerciseActivity extends Activity {
 
+    private static String TAG = ExerciseActivity.class.getSimpleName();
+
     private int numOfWorkout;
     private int numOfExercise;
     private SeekBar difficultyBar;
+    private Button doneButton;
     private Exercise exercise;
+    private DBAdapter db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +84,55 @@ public class ExerciseActivity extends Activity {
         // Set the initial value for the slider
         difficultyBar = (SeekBar) findViewById(R.id.exerciseDifficultySeekBar);
         difficultyBar.setProgress(2);
+
+        // Get the done button and set the onclick listener
+        // This button deals with increasing and decreasing the users weight.
+        doneButton = (Button) findViewById(R.id.exerciseDoneButton);
+        doneButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                // Check the value of the progress bar to determine how to adjust the weight of the exercise.
+                switch (difficultyBar.getProgress()) {
+                    case 0:
+                        for(int i = 0; i < 2; i++)
+                            exercise.decreaseWeight();
+                        break;
+
+                    case 1:
+                        exercise.decreaseWeight();
+                        break;
+
+                    case 2:
+                        // Just leave the weight how it is.
+                        break;
+
+                    case 3:
+                        exercise.increaseWeight();
+                        break;
+
+                    case 4:
+                        for(int i = 0; i < 2; i++)
+                            exercise.increaseWeight();
+                        break;
+
+                }
+
+                // update the exercise in the sqlite database
+                db = new DBAdapter(ExerciseActivity.this);
+                db.open();
+
+                boolean updated = db.updateUserExercise(MainSingleton.get(ExerciseActivity.this).getUser(), exercise);
+                if(!updated)
+                    Log.v(TAG, "Exercise data failed to update");
+
+                Intent intent = new Intent(ExerciseActivity.this, WorkoutExerciseListActivity.class);
+                // I don't want the intent to appear on the stack so set the no history flag.
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                startActivity(intent);
+            }
+        });
 
     }
 

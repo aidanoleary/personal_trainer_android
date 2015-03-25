@@ -67,6 +67,9 @@ public class WorkoutExerciseListActivity extends Activity {
         exerciseList.setAdapter(new WorkoutExerciseArrayAdapter(this, exerciseNames, exerciseSetsList, exerciseRepsList));
         final Intent intent = new Intent(this, ExerciseActivity.class);
 
+        // Set flag to no history so activity doesn't end up on the stack.
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+
         exerciseList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

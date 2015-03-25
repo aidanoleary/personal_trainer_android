@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 
 import com.aidanoleary.personaltrainer.helpers.DBAdapter;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -38,11 +37,7 @@ public class MainSingleton {
 
 
 
-        try {
-            db.open();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        //db.open();
 
         if(db.isDataInDb("user", "email", "'" + mSharedPreferences.getString("Email", "") + "'")) {
             // User does exist in the database.
@@ -54,6 +49,7 @@ public class MainSingleton {
         }
         else {
             // Create 6 exercises
+
 
             ArrayList<Exercise> exercises = new ArrayList<Exercise>();
             for (int i = 0; i < 6; i++) {
@@ -77,9 +73,10 @@ public class MainSingleton {
             //Intent intent = new Intent(appContext, GenerateRoutineActivity.class);
             //appContext.startActivity(intent);
 
+
         }
 
-        db.close();
+        //db.close();
     }
 
     public static MainSingleton get(Context c) {
