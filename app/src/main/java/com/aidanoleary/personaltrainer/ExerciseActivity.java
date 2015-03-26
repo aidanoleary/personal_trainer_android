@@ -95,6 +95,8 @@ public class ExerciseActivity extends Activity {
 
                 // Check the value of the progress bar to determine how to adjust the weight of the exercise.
                 switch (difficultyBar.getProgress()) {
+
+                    // TODO maybe change this to include more difficulties and a smaller weight increase/decrease 1.25 instead of 2.5
                     case 0:
                         for(int i = 0; i < 2; i++)
                             exercise.decreaseWeight();
@@ -119,6 +121,12 @@ public class ExerciseActivity extends Activity {
 
                 }
 
+                // Specify that the exercise has been completed by updating it's completed variable
+                exercise.makeCompleted();
+                if(exercise.isCompleted()) {
+                    Log.v(TAG, "exercise has been set to completed");
+                }
+
                 // update the exercise in the sqlite database
                 db = new DBAdapter(ExerciseActivity.this);
                 db.open();
@@ -128,8 +136,8 @@ public class ExerciseActivity extends Activity {
                     Log.v(TAG, "Exercise data failed to update");
 
                 Intent intent = new Intent(ExerciseActivity.this, WorkoutExerciseListActivity.class);
-                // I don't want the intent to appear on the stack so set the no history flag.
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                // I don't want the intent to appear on the stack so set the clear top flag.
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }
         });

@@ -27,6 +27,7 @@ public class WorkoutExerciseListActivity extends Activity {
     private String[] exerciseNames;
     private String[] exerciseSetsList;
     private String[] exerciseRepsList;
+    private boolean[] exerciseCompletedList;
 
 
     @Override
@@ -49,12 +50,14 @@ public class WorkoutExerciseListActivity extends Activity {
         exerciseNames = new String[exerciseListSize];
         exerciseSetsList = new String[exerciseListSize];
         exerciseRepsList = new String[exerciseListSize];
+        exerciseCompletedList = new boolean[exerciseListSize];
 
         // Get the variables from the workout.
         for(int i = 0; i < exerciseListSize; i++) {
             exerciseNames[i] = workout.getExercise(i).getName();
             exerciseSetsList[i] = Integer.toString(workout.getExercise(i).getSets());
             exerciseRepsList[i] = Integer.toString(workout.getExercise(i).getReps());
+            exerciseCompletedList[i] = workout.getExercise(i).isCompleted();
         }
 
 
@@ -64,8 +67,24 @@ public class WorkoutExerciseListActivity extends Activity {
         ((TextView) findViewById(R.id.exerciseListTitleText)).setText(workout.getName());
 
         ListView exerciseList = (ListView) findViewById(R.id.listView);
-        exerciseList.setAdapter(new WorkoutExerciseArrayAdapter(this, exerciseNames, exerciseSetsList, exerciseRepsList));
+        exerciseList.setAdapter(new WorkoutExerciseArrayAdapter(this, exerciseNames, exerciseSetsList, exerciseRepsList, exerciseCompletedList));
         final Intent intent = new Intent(this, ExerciseActivity.class);
+
+        // set the background colours of the exercises that have been completed.
+        /*
+        for(int i = 0; i < exerciseList.getChildCount(); i++) {
+            Log.v(TAG, "=========" + i);
+            //Check if the exercise has been completed.
+            Log.v(TAG, "Exercise completed: " + workout.getExerciseList().get(i).isCompleted());
+            if(workout.getExerciseList().get(i).isCompleted()) {
+                // Set the background color if the exercise is completed.
+                Log.v(TAG, "Background colour is being set");
+                exerciseList.getChildAt(i);
+            }
+
+
+        }
+        */
 
         // Set flag to no history so activity doesn't end up on the stack.
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);

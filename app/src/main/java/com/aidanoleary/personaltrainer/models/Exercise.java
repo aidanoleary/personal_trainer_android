@@ -19,6 +19,8 @@ public class Exercise {
     private double weight;
     private int reps;
     private int sets;
+    // A done variable used to determine if the exercise has been completed during the workout.
+    private boolean completed;
 
     // Constructors for the Exercise class
     public Exercise() {
@@ -35,6 +37,7 @@ public class Exercise {
         this.weight = 0;
         this.reps = 0;
         this.sets = 0;
+        this.completed = false;
     }
 
     public Exercise(String name) {
@@ -127,6 +130,25 @@ public class Exercise {
         this.serverId = serverId;
     }
 
+    /*
+    public void setCompleted() {
+        Log.v("Aidan is the best", "setCompleted entered");
+        if(completed == false) {
+            completed = true;
+        }
+        else {
+            completed = false;
+        }
+    }
+    */
+    public void makeCompleted() {
+        this.completed = true;
+    }
+
+    public void makeNotCompleted() {
+        this.completed = false;
+    }
+
 
     // Getters
     public long getId() {
@@ -183,6 +205,10 @@ public class Exercise {
 
     public int getServerId() {
         return this.serverId;
+    }
+
+    public boolean isCompleted() {
+        return completed;
     }
 
 
