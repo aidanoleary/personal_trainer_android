@@ -13,10 +13,5 @@ public class PersonalTrainerApplication extends Application {
     public void onCreate() {
         Log.v(TAG, "Application has started successfully");
 
-        /*
-        //Initialise Parse with the appID and clientKey
-        Parse.enableLocalDatastore(this);
-        Parse.initialize(this, "DudHQ1INQFxXETZAqgU3zPxspEsyELfKUZ6uPrYw", "nMfnRuGExd2IeCWp7DnEIx3Jv3s4ILzVXC6AwB3C");
-        */
     }
 }
