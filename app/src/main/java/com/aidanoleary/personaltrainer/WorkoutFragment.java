@@ -2,6 +2,7 @@ package com.aidanoleary.personaltrainer;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -60,8 +61,11 @@ public class WorkoutFragment extends Fragment {
 
 
         // Check if the exercises have been added if not download them and add them from the server
-        addExercisesIfEmpty();
-
+        // Check if the user is logged in.
+        if(getActivity().getSharedPreferences("CurrentUser", Context.MODE_PRIVATE).contains("AuthToken")) {
+            addExercisesIfEmpty();
+        }
+        // TODO continue the bit below.
         // Check if the user is logged in
 
 

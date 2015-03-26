@@ -3,6 +3,7 @@ package com.aidanoleary.personaltrainer;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,10 +12,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.aidanoleary.personaltrainer.helpers.DBAdapter;
 import com.aidanoleary.personaltrainer.models.Exercise;
 import com.aidanoleary.personaltrainer.models.MainSingleton;
+import com.aidanoleary.personaltrainer.models.User;
+import com.squareup.picasso.Picasso;
 
 
 public class ExerciseActivity extends Activity {
@@ -27,6 +31,10 @@ public class ExerciseActivity extends Activity {
     private Button doneButton;
     private Exercise exercise;
     private DBAdapter db;
+
+    // TODO change this when the application gets moved to the new website url.
+    // private String apiUrl = "http://personal-trainer-api.herokuapp.com";
+    private String imageUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,8 +86,15 @@ public class ExerciseActivity extends Activity {
         setAndRepsText.setText("Sets: " + exercise.getSets() + " / " + "Reps: " + exercise.getReps());
 
         // Set the image view
+        // Load the image from the web server using the picasso
         ImageView exerciseImage = (ImageView) findViewById(R.id.exerciseImage);
-        exerciseImage.setImageResource(R.drawable.placeholder_image);
+        // Set the image url by firstly getting the api url from shared preferences.
+        String apiUrl = PreferenceManager.getDefaultSharedPreferences(this).getString("ApiUrl", "");
+        imageUrl = apiUrl + exercise.getImageUrl();
+        // Load the image using the picasso library.
+        Picasso.with(this).load(imageUrl).placeholder(R.drawable.placeholder_image).into(exerciseImage);
+
+        //exerciseImage.setImageResource(R.drawable.placeholder_image);
 
         // Set the initial value for the slider
         difficultyBar = (SeekBar) findViewById(R.id.exerciseDifficultySeekBar);
@@ -99,11 +114,11 @@ public class ExerciseActivity extends Activity {
                     // TODO maybe change this to include more difficulties and a smaller weight increase/decrease 1.25 instead of 2.5
                     case 0:
                         for(int i = 0; i < 2; i++)
-                            exercise.decreaseWeight();
+                            exercise.increaseWeight();
                         break;
 
                     case 1:
-                        exercise.decreaseWeight();
+                        exercise.increaseWeight();
                         break;
 
                     case 2:
@@ -111,12 +126,12 @@ public class ExerciseActivity extends Activity {
                         break;
 
                     case 3:
-                        exercise.increaseWeight();
+                        exercise.decreaseWeight();
                         break;
 
                     case 4:
                         for(int i = 0; i < 2; i++)
-                            exercise.increaseWeight();
+                            exercise.decreaseWeight();
                         break;
 
                 }
@@ -131,9 +146,16 @@ public class ExerciseActivity extends Activity {
                 db = new DBAdapter(ExerciseActivity.this);
                 db.open();
 
-                boolean updated = db.updateUserExercise(MainSingleton.get(ExerciseActivity.this).getUser(), exercise);
+                User currentUser = MainSingleton.get(ExerciseActivity.this).getUser();
+
+                boolean updated = db.updateUserExercise(currentUser, exercise);
                 if(!updated)
                     Log.v(TAG, "Exercise data failed to update");
+
+                // Update the users points and stats
+                // TODO continue here update database stats
+                currentUser.setPoints(currentUser.getPoints() + 10);
+                Toast.makeText(getApplicationContext(), "+10 points", Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent(ExerciseActivity.this, WorkoutExerciseListActivity.class);
                 // I don't want the intent to appear on the stack so set the clear top flag.

@@ -75,6 +75,27 @@ public class MainActivity extends Activity
 
 
         // =====================
+        // Add API url to shared preferences if it doesn't exist
+        // =====================
+        // TODO maybe move this and other parts into the application initialization.
+        /*
+        SharedPreferences defaultPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        // Check if the default preferences already contains the api url
+        if(!defaultPreferences.contains("ApiUrl")) {
+            // It doesn't contain it so add the api url to shared preferences.
+            SharedPreferences.Editor editor = defaultPreferences.edit();
+            editor.putString("ApiUrl", API_URL);
+            editor.commit();
+
+        }
+
+        Log.v(TAG, defaultPreferences.getString("ApiUrl", "") + " has been added to the default shared preferences.");
+        */
+        // =====================
+
+
+        // =====================
         // SQLite Database tasks
         // ======================
         // Check if the database exists and create it if it doesn't
@@ -303,6 +324,7 @@ public class MainActivity extends Activity
         intent.putExtra("apiUrl", API_URL);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
     }
 
