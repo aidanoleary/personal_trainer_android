@@ -158,6 +158,9 @@ public class ExerciseActivity extends Activity {
                 Toast.makeText(getApplicationContext(), "+10 points", Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent(ExerciseActivity.this, WorkoutExerciseListActivity.class);
+
+                // Set the workout number to go to
+                intent.putExtra("workoutNumber", numOfWorkout);
                 // I don't want the intent to appear on the stack so set the clear top flag.
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);

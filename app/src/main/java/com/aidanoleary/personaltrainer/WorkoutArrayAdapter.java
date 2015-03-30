@@ -35,6 +35,7 @@ public class WorkoutArrayAdapter extends ArrayAdapter<String> {
         TextView workoutName = (TextView) rowView.findViewById(R.id.workoutNameText);
         TextView workoutDay = (TextView) rowView.findViewById(R.id.workoutDayText);
 
+
         // Customise the content of each row based on the position
         workoutName.setText(workoutNames[position]);
         workoutDay.setText(workoutDays[position]);

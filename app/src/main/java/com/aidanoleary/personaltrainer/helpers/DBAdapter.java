@@ -172,7 +172,7 @@ public class DBAdapter {
     public long insertWorkout(Workout workout) {
         ContentValues initialValues = new ContentValues();
         initialValues.put("name", workout.getName());
-        initialValues.put("description", workout.getDescription());
+        initialValues.put("description", workout.getDay());
         initialValues.put("routine_id", workout.getRoutineId());
         return db.insert("workout", null, initialValues);
     }
