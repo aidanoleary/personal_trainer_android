@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,13 +16,6 @@ import android.view.ViewGroup;
 
 import com.aidanoleary.personaltrainer.helpers.DBAdapter;
 import com.aidanoleary.personaltrainer.models.User;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 
 public class MainActivity extends Activity
@@ -73,36 +65,12 @@ public class MainActivity extends Activity
         mNavigationDrawerFragment.closeDrawer();
 
 
-
-        // =====================
-        // Add API url to shared preferences if it doesn't exist
-        // =====================
-        // TODO maybe move this and other parts into the application initialization.
-        /*
-        SharedPreferences defaultPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-        // Check if the default preferences already contains the api url
-        if(!defaultPreferences.contains("ApiUrl")) {
-            // It doesn't contain it so add the api url to shared preferences.
-            SharedPreferences.Editor editor = defaultPreferences.edit();
-            editor.putString("ApiUrl", API_URL);
-            editor.commit();
-
-        }
-
-        Log.v(TAG, defaultPreferences.getString("ApiUrl", "") + " has been added to the default shared preferences.");
-        */
-        // =====================
-
-
         // =====================
         // SQLite Database tasks
         // ======================
-        // Check if the database exists and create it if it doesn't
-        createDB();
-        Log.v(TAG, "database created");
 
         // Initialise DBAdapter to communicate with the pre configured database
+        /*
         db = new DBAdapter(this);
         Log.v(TAG, "DBAdapter initialised.");
 
@@ -115,43 +83,9 @@ public class MainActivity extends Activity
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
-        // =======================
-
+        */
 
         // =======================
-        // User Login Check
-        // =======================
-
-        // Get shared preferences for the current user
-        mPreferences = getApplicationContext().getSharedPreferences("CurrentUser", MODE_PRIVATE);
-
-        // Check if the user is logged in by checking shared preferences for a authorization token
-        if(!mPreferences.contains("AuthToken")) {
-            // User isn't logged in so go to the login screen
-            navigateToLogin();
-        }
-        else {
-
-            // There user is logged in so the workout fragment will load.
-
-            // Check the database to see if the user currently has a workout
-            /*
-            try {
-                db.open();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
-            if(db.isDataInDb("user", "email", "'" + mPreferences.getString("Email", "") + "'")) {
-                // User data is in the database so initialise the user object.
-                //currentUser = MainSingleton.get(this).getUser();
-            }
-
-            db.close();
-            */
-        }
 
     }
 
@@ -321,58 +255,11 @@ public class MainActivity extends Activity
     public void navigateToLogin() {
         Intent intent = new Intent(this, LoginActivity.class);
         //Pass the api url to the intent.
-        intent.putExtra("apiUrl", API_URL);
+        //intent.putExtra("apiUrl", API_URL);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
-    }
-
-
-    // SQLite Database creation
-
-    // A method that will be used to copy the database from one location to another
-    // it uses input and output streams
-    private void copyDB(InputStream input, OutputStream output) throws IOException {
-        // --- copy 1K bytes at a time ---
-        byte[] buffer = new byte[1024];
-        int length;
-        while ((length = input.read(buffer)) > 0) {
-            output.write(buffer, 0, length);
-        }
-        input.close();
-        output.close();
-    }
-
-    // A method that will be used to create the initial database
-    private void createDB() {
-        String destDir = "/data/data/" + getPackageName() +
-                "/databases/";
-
-        String destPath = destDir + "MyDB";
-        File f = new File(destPath);
-
-        // Check if the database already exists if not create it.
-        // This stops the database from being overridden resulting in data being deleted.
-        if (!f.exists()) {
-            File directory = new File(destDir);
-            directory.mkdirs();
-
-            // Copy the database from the assets folder into the database folder
-            try {
-                copyDB(getBaseContext().getAssets().open("mydb"), new FileOutputStream(destPath));
-                Log.v("Database created", "Database created");
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    // Create a default workout for the user
-    public void createDefaultWorkout() {
-
     }
 
 

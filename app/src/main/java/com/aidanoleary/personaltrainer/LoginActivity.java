@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -50,8 +51,8 @@ public class LoginActivity extends Activity {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
         setContentView(R.layout.activity_login);
-        //Get the apiUrl that was passed to the intent.
-        loginUrl = getIntent().getStringExtra("apiUrl") + "users/sign_in";
+        //Get the apiUrl from the shared preferences
+        loginUrl = PreferenceManager.getDefaultSharedPreferences(this).getString("ApiUrl", "") + "users/sign_in";
         mPreferences = getSharedPreferences("CurrentUser", MODE_PRIVATE);
 
         //Get user interface objects
@@ -105,8 +106,6 @@ public class LoginActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
-                //Pass the apiUrl to the intent, so it can be accessed from the Signup Activity.
-                intent.putExtra("apiUrl", getIntent().getStringExtra("apiUrl"));
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
@@ -207,7 +206,7 @@ public class LoginActivity extends Activity {
 
 
                         // Launch the main activity
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        Intent intent = new Intent(getApplicationContext(), LauncherActivity.class);
                         startActivity(intent);
                         finish();
                         Toast.makeText(LoginActivity.this, jsonObject.getString("info"), Toast.LENGTH_LONG).show();

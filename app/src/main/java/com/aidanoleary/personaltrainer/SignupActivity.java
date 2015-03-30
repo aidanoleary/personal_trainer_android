@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -48,7 +49,8 @@ public class SignupActivity extends Activity {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_signup);
 
-        signupUrl = getIntent().getStringExtra("apiUrl") + "users";
+        // Get the api url from the shared preferences.
+        signupUrl = PreferenceManager.getDefaultSharedPreferences(this).getString("ApiUrl", "") + "users";
 
         //Get User interface objects
         mEmailText = (EditText) findViewById(R.id.signupEmailField);
@@ -93,7 +95,7 @@ public class SignupActivity extends Activity {
                     else {
                         //Set the loading spinner to visible
                         setProgressBarIndeterminateVisibility(true);
-                        mSignupButton.setText("Logging in...");
+                        mSignupButton.setText("Signing up...");
                         mSignupButton.setClickable(false);
                         new SignupTask().execute(signupUrl);
                         setProgressBarIndeterminateVisibility(false);
@@ -197,7 +199,7 @@ public class SignupActivity extends Activity {
                     if (jsonObject.getBoolean("success")) {
 
                         // Launch the main activity
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        Intent intent = new Intent(getApplicationContext(), LauncherActivity.class);
                         startActivity(intent);
                         finish();
                         Toast.makeText(SignupActivity.this, jsonObject.getString("info"), Toast.LENGTH_LONG).show();

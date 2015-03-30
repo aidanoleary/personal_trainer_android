@@ -262,7 +262,9 @@ public class GenerateRoutineActivity extends Activity {
                     default:
                         // Create the users workout depending on the variables that have been
                         // generated, Then set the main singleton to this user.
-                        MainSingleton.setUser(generateTheRoutine());
+                        generateTheRoutine();
+                        MainSingleton.get(getApplicationContext());
+                        //MainSingleton.setUser(generateTheRoutine());
 
                         // Update the Database
 

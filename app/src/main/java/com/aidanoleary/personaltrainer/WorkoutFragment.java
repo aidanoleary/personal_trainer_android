@@ -1,11 +1,7 @@
 package com.aidanoleary.personaltrainer;
 
 import android.app.Fragment;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -17,22 +13,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.aidanoleary.personaltrainer.helpers.DBAdapter;
-import com.aidanoleary.personaltrainer.models.Exercise;
 import com.aidanoleary.personaltrainer.models.MainSingleton;
 import com.aidanoleary.personaltrainer.models.User;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -62,9 +45,11 @@ public class WorkoutFragment extends Fragment {
 
         // Check if the exercises have been added if not download them and add them from the server
         // Check if the user is logged in.
+        /*
         if(getActivity().getSharedPreferences("CurrentUser", Context.MODE_PRIVATE).contains("AuthToken")) {
             addExercisesIfEmpty();
         }
+        */
         // TODO continue the bit below.
         // Check if the user is logged in
 
@@ -158,10 +143,8 @@ public class WorkoutFragment extends Fragment {
 
     // A method that checks if the exercises have been added to the sqlite database and if they haven't adds them
     // from the server.
+    /*
     private void addExercisesIfEmpty() {
-        // ==================
-        // Run this the first time the app is run
-        // ===============
 
         // Check if exercises have been added
         // if they haven't run a async task to get the exercises from the server and load them into the database
@@ -190,12 +173,12 @@ public class WorkoutFragment extends Fragment {
             // TODO CONTINUE HERE 000000000000000000000
         }
 
-
-        // ===============
     }
-
+    */
     // A inner class to retrieve exercises from the personal trainer api
     // and upload them to local sqlite database
+
+    /*
     private class GetExercisesTask extends AsyncTask<String, Void, String> {
 
         private final ProgressDialog dialog = new ProgressDialog(getActivity());
@@ -241,6 +224,7 @@ public class WorkoutFragment extends Fragment {
             return stringBuilder.toString();
 
         }
+
 
         @Override
         protected void onPostExecute(String result) {
@@ -305,4 +289,6 @@ public class WorkoutFragment extends Fragment {
             dialog.dismiss();
         }
     }
+    */
+
 }

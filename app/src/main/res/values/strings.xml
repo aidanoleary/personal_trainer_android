@@ -46,5 +46,6 @@
     <string name="title_activity_workout_exercise_list">WorkoutExerciseListActivity</string>
     <string name="exercise_list_start">Start</string>
     <string name="title_activity_exercise">ExerciseActivity</string>
+    <string name="title_activity_launcher">LauncherActivity</string>
 
 </resources>
