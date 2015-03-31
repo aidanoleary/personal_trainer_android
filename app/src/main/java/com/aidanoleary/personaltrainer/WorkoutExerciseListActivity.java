@@ -10,7 +10,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.aidanoleary.personaltrainer.helpers.DBAdapter;
+import com.aidanoleary.personaltrainer.models.Exercise;
 import com.aidanoleary.personaltrainer.models.MainSingleton;
 import com.aidanoleary.personaltrainer.models.User;
 import com.aidanoleary.personaltrainer.models.Workout;
@@ -29,6 +32,8 @@ public class WorkoutExerciseListActivity extends Activity {
     private String[] exerciseRepsList;
     private boolean[] exerciseCompletedList;
 
+    private DBAdapter db;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,13 +43,7 @@ public class WorkoutExerciseListActivity extends Activity {
         // Store the workout number
         numOfWorkout = getIntent().getIntExtra("workoutNumber", 0);
 
-        // Maybe change this class to only load up the workout
-        // ================== 0000000000000000
-        // 000000000000
-
-
-
-        currentUser = currentUser = MainSingleton.get(this).getUser();
+        currentUser = MainSingleton.get(this).getUser();
         Workout workout = currentUser.getRoutine().getWorkouts().get(numOfWorkout);
         int exerciseListSize = workout.getExerciseList().size();
         exerciseNames = new String[exerciseListSize];
@@ -70,22 +69,6 @@ public class WorkoutExerciseListActivity extends Activity {
         exerciseList.setAdapter(new WorkoutExerciseArrayAdapter(this, exerciseNames, exerciseSetsList, exerciseRepsList, exerciseCompletedList));
         final Intent intent = new Intent(this, ExerciseActivity.class);
 
-        // set the background colours of the exercises that have been completed.
-        /*
-        for(int i = 0; i < exerciseList.getChildCount(); i++) {
-            Log.v(TAG, "=========" + i);
-            //Check if the exercise has been completed.
-            Log.v(TAG, "Exercise completed: " + workout.getExerciseList().get(i).isCompleted());
-            if(workout.getExerciseList().get(i).isCompleted()) {
-                // Set the background color if the exercise is completed.
-                Log.v(TAG, "Background colour is being set");
-                exerciseList.getChildAt(i);
-            }
-
-
-        }
-        */
-
         // Set flag to no history so activity doesn't end up on the stack.
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
@@ -98,10 +81,58 @@ public class WorkoutExerciseListActivity extends Activity {
                 startActivity(intent);
             }
         });
-        //exerciseList.setAdapter(new WorkoutExerciseArrayAdapter(this, workout.get));
+
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Check if all the exercises have been completed if they have save the workout to the database
+        // also set a saved variable workout to true so it doesn't keep saving
+        // notify the user the workout has been saved.
+        currentUser = MainSingleton.get(this).getUser();
+        Workout currentWorkout = currentUser.getRoutine().getWorkouts().get(numOfWorkout);
+
+        // Check if the current workout hasn't already been saved.
+        if(!currentWorkout.getIsSaved()) {
+            int numCompleted = 0;
+            for (Exercise exercise : currentWorkout.getExerciseList()) {
+                if (exercise.isCompleted())
+                    numCompleted++;
+            }
+
+            // Check if the number of completed exercises is equal to the number of exercises
+            if (numCompleted == currentWorkout.getExerciseList().size()) {
+
+
+                // Save the workout to the database. By inserting a user workout entry.
+                db = new DBAdapter(this);
+                db.open();
+
+                long userWorkoutId = db.insertUserWorkout(currentUser,currentWorkout);
+
+                // Loop through exercises in the workout saving each one to the database.
+                for(int i = 0; i < currentWorkout.getExerciseList().size(); i++) {
+                    db.insertUserWorkoutExercise(userWorkoutId, currentWorkout.getExerciseList().get(i));
+                }
+
+                db.close();
+
+                // Set the is saved variable to true.
+                currentWorkout.setIsSaved(true);
+
+                Intent intent = new Intent(WorkoutExerciseListActivity.this, MainActivity.class);
+                // I don't want the intent to appear on the stack so set the clear top flag.
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+
+                // Show a toast to let the user know their workout has been saved.
+                Toast.makeText(this, "Workout has been saved.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

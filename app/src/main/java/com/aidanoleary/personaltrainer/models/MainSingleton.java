@@ -37,14 +37,17 @@ public class MainSingleton {
 
 
 
-        //db.open();
+        db.open();
 
         if(db.isDataInDb("user", "email", "'" + mSharedPreferences.getString("Email", "") + "'")) {
             // User does exist in the database.
 
+
             // Get the user and their routine from the database and load it to current user object.
             mUser = db.getUserAndRoutine(mSharedPreferences.getString("Email", ""));
 
+            // Get the users stats from the database
+            mUser = db.getUserStat(mUser);
 
         }
         else {
@@ -76,7 +79,7 @@ public class MainSingleton {
 
         }
 
-        //db.close();
+        db.close();
     }
 
     public static MainSingleton get(Context c) {

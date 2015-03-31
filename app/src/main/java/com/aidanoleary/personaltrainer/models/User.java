@@ -16,9 +16,27 @@ public class User {
     private String authorizationToken;
     private Routine routine;
     private int points;
+    private int totalReps;
+    private double totalWeight;
+    private double totalCardio;
+    private double totalDistance;
 
     // constructors
     public User() {
+        id = 0;
+        email = "";
+        authorizationToken = "";
+        age = 0;
+        gender = "";
+        height = 0;
+        weight = 0;
+        routine = null;
+        points = 0;
+        totalReps = 0;
+        totalWeight = 0;
+        totalCardio = 0;
+        totalDistance = 0;
+
     }
 
     public User(String email, int age, String gender) {
@@ -92,6 +110,25 @@ public class User {
         this.points = points;
     }
 
+
+    public void setTotalReps(int totalReps) {
+        this.totalReps = totalReps;
+    }
+
+
+    public void setTotalDistance(double totalDistance) {
+        this.totalDistance = totalDistance;
+    }
+
+    public void setTotalCardio(double totalCardio) {
+        this.totalCardio = totalCardio;
+    }
+
+    public void setTotalWeight(double totalWeight) {
+        this.totalWeight = totalWeight;
+    }
+
+
     // getters
     public long getId() {
         return this.id;
@@ -133,5 +170,24 @@ public class User {
 
     public int getPoints() {
         return points;
+    }
+
+    public int getTotalReps() {
+        return totalReps;
+    }
+
+
+    public double getTotalDistance() {
+        return totalDistance;
+    }
+
+
+
+    public double getTotalCardio() {
+        return totalCardio;
+    }
+
+    public double getTotalWeight() {
+        return totalWeight;
     }
 }

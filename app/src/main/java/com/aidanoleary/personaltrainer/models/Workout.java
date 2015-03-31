@@ -13,6 +13,7 @@ public class Workout {
     private String description;
     private String day;
     private ArrayList<Exercise> exercises;
+    private boolean isSaved;
 
 
     // Constructors for the workout class
@@ -23,6 +24,7 @@ public class Workout {
         this.description = "";
         this.day = "";
         this.exercises = new ArrayList<Exercise>();
+        this.isSaved = false;
     }
 
     public Workout(String name, String description, String day) {
@@ -65,6 +67,10 @@ public class Workout {
         this.exercises = exercises;
     }
 
+    public void setIsSaved(boolean isSaved) {
+        this.isSaved = isSaved;
+    }
+
     // Getters
     public long getId() {
         return this.id;
@@ -103,5 +109,9 @@ public class Workout {
 
     public String getDay() {
         return day;
+    }
+
+    public boolean getIsSaved() {
+        return isSaved;
     }
 }

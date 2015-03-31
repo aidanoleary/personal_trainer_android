@@ -579,7 +579,14 @@ public class GenerateRoutineActivity extends Activity {
 
         // insert the user into the database
         db.open();
-        db.insertUserAndRoutine(user);
+
+        // Insert the user and their routine into the database
+        long userId = db.insertUserAndRoutine(user);
+
+        // insert the user's stats using the user's ID.
+        user.setId(userId);
+        db.insertUserStat(user);
+
         db.close();
 
         return user;

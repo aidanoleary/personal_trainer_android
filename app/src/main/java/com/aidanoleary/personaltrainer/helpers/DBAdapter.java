@@ -10,12 +10,11 @@ import android.util.Log;
 import com.aidanoleary.personaltrainer.models.Exercise;
 import com.aidanoleary.personaltrainer.models.Routine;
 import com.aidanoleary.personaltrainer.models.User;
-import com.aidanoleary.personaltrainer.models.UserWorkout;
-import com.aidanoleary.personaltrainer.models.UserWorkoutExercise;
 import com.aidanoleary.personaltrainer.models.Workout;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by aidanoleary on 14/01/2015.
@@ -113,13 +112,13 @@ public class DBAdapter {
     // Check if a record exists in the database
     // ===========
     public boolean isDataInDb(String tableName, String dbfield, String fieldValue) {
-        open();
+
         String dbQuery = "SELECT * FROM " + tableName + " WHERE " + dbfield + " = " + fieldValue;
             Cursor cursor = db.rawQuery(dbQuery, null);
             if(cursor.getCount() <= 0) {
                 return false;
             }
-        close();
+
         return true;
     }
 
@@ -156,6 +155,19 @@ public class DBAdapter {
         initialValues.put("height", user.getHeight());
         initialValues.put("routine_id", user.getRoutine().getId());
         return db.insert("user", null, initialValues);
+    }
+
+    // Insert a users stats into the database
+    // =========
+    public long insertUserStat(User user) {
+        ContentValues initialValues = new ContentValues();
+        initialValues.put("user_id", user.getId());
+        initialValues.put("points", user.getPoints());
+        initialValues.put("total_reps", 0);
+        initialValues.put("total_weight", 0);
+        initialValues.put("total_cardio", 0);
+        initialValues.put("total_distance", 0);
+        return db.insert("stat", null, initialValues);
     }
 
     // Insert a routine into the database
@@ -220,24 +232,25 @@ public class DBAdapter {
     // Insert a user_workout
     // ==================
 
-    public long insertUserWorkout(UserWorkout userWorkout) {
+    public long insertUserWorkout(User user, Workout workout) {
         ContentValues initialValues = new ContentValues();
-        initialValues.put("user_id", userWorkout.getUserId());
-        initialValues.put("workout_id", userWorkout.getWorkoutId());
+        initialValues.put("user_id", user.getId());
+        initialValues.put("workout_id", workout.getId());
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        initialValues.put("workout_date", dateFormat.format(userWorkout.getWorkoutDate()));
-        initialValues.put("time_taken", userWorkout.getTimeTaken());
+        initialValues.put("date", dateFormat.format(new Date()));
+        // TODO I will add time taken later.
+        initialValues.put("time_taken", 0);
         return db.insert("user_workout", null, initialValues);
     }
 
-    public long insertUserWorkoutExercise(UserWorkoutExercise userWorkoutExercise) {
+    public long insertUserWorkoutExercise(long userWorkoutId, Exercise exercise) {
         ContentValues initialValues = new ContentValues();
-        initialValues.put("user_workout_id", userWorkoutExercise.getUserWorkoutId());
-        initialValues.put("exercise_id", userWorkoutExercise.getExerciseId());
-        initialValues.put("number_of_reps", userWorkoutExercise.getNumberOfReps());
-        initialValues.put("number_of_sets", userWorkoutExercise.getNumberOfSets());
-        initialValues.put("weight", userWorkoutExercise.getWeight());
-        return db.insert("user_workout", null, initialValues);
+        initialValues.put("user_workout_id", userWorkoutId);
+        initialValues.put("exercise_id", exercise.getId());
+        initialValues.put("reps", exercise.getReps());
+        initialValues.put("sets", exercise.getSets());
+        initialValues.put("weight", exercise.getWeight());
+        return db.insert("user_workout_exercise", null, initialValues);
     }
 
     // Insert a user and their routine
@@ -245,7 +258,8 @@ public class DBAdapter {
 
     // This will be used when first inserting a user into the database after they have signed up.
     // And also when the user generates a new workout.
-    public void insertUserAndRoutine(User user) {
+    // It returns the users ID.
+    public long insertUserAndRoutine(User user) {
 
         // Check if the user already exists in the database
         if(isDataInDb("user", "email", "'" + user.getEmail() + "'")) {
@@ -290,7 +304,7 @@ public class DBAdapter {
 
         }
 
-
+        return user.getId();
 
 
     }
@@ -310,8 +324,13 @@ public class DBAdapter {
 
     }
 
+    // Updates items in the database
+    // ==================================
+    // *****************
+
     // Update a user's exercise including their reps and sets
     // It returns true if the user_exercise was successfully updated.
+    // ===============
     public boolean updateUserExercise(User user, Exercise exercise) {
         ContentValues args = new ContentValues();
         args.put("weight", exercise.getWeight());
@@ -320,27 +339,24 @@ public class DBAdapter {
         return db.update("user_exercise", args, "user_id = " + user.getId() + " AND exercise_id = " + exercise.getId(), null) > 0;
     }
 
-    /*
-    // --- updates a contact ---
-    public boolean updateContact(long rowId, String name, String email) {
+    // updates a specific user's stats
+    // ===============================
+    public boolean updateUserStat(User user) {
         ContentValues args = new ContentValues();
-        args.put(KEY_NAME, name);
-        args.put(KEY_EMAIL, email);
-        return db.update(DATABASE_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
+        args.put("points", user.getPoints());
+        args.put("total_reps", user.getTotalReps());
+        args.put("total_weight", user.getTotalWeight());
+        args.put("total_cardio", user.getTotalCardio());
+        args.put("total_distance", user.getTotalDistance());
+        return db.update("stat", args, "user_id=" + user.getId(), null) > 0;
     }
-    */
-
-
-    // TODO continue here add the update user and routine
-    // public long insert
-
-
 
     // Retrieving items from the database
     // ==================================
     // *****************
 
     // Retrieve an Arraylist of all the exercises for a particular muscle group
+    // ===============
     public ArrayList<Exercise> getExercisesByMainMuscle(String mainMuscle) {
         String selectQuery = "SELECT * FROM exercise WHERE main_muscle = '" + mainMuscle + "'";
         Cursor mCursor = db.rawQuery(selectQuery, null);
@@ -405,9 +421,9 @@ public class DBAdapter {
     }
 
 
+    // Retrieve a user and their routine from the database, it returns the user by their email
+    // ====================
     public User getUserAndRoutine(String userEmail) {
-
-        open();
 
         // Create a user pointer
         User user = new User();
@@ -451,12 +467,34 @@ public class DBAdapter {
 
         }
 
-        close();
+        return user;
+    }
+
+    // Retrieve a user's stats, it takes the user as a parameter and returns the user with their stats.
+    // ================
+    public User getUserStat(User user) {
+        String selectQuery = "SELECT * FROM stat WHERE user_id = " + user.getId();
+        Cursor mCursor = db.rawQuery(selectQuery, null);
+
+        if(mCursor != null) {
+            // The cursor returned has found a stat entry.
+            mCursor.moveToFirst();
+
+            // Update the user objects stats
+            user.setPoints(mCursor.getInt(mCursor.getColumnIndex("points")));
+            user.setTotalReps(mCursor.getInt(mCursor.getColumnIndex("total_reps")));
+            user.setTotalWeight(mCursor.getDouble(mCursor.getColumnIndex("total_weight")));
+            user.setTotalCardio(mCursor.getDouble(mCursor.getColumnIndex("total_cardio")));
+            user.setTotalDistance(mCursor.getDouble(mCursor.getColumnIndex("total_distance")));
+
+        }
+
         return user;
     }
 
 
     // A method that returns the workout with a specified ID this includes all it's exercises.
+    // ================
     public Workout getWorkout(long id) {
 
         Workout workout = new Workout();
@@ -524,6 +562,7 @@ public class DBAdapter {
     }
 
     // Retrieve a routine including it's workouts and exercises
+    // ===============
     public Routine getRoutine(long id) {
 
         // Create a new routine
@@ -562,6 +601,7 @@ public class DBAdapter {
     // Get the weight, reps , and sets of a particular exercise a user is doing.
     // It accepts a user object and a exercise object. Then it retrieves the user_exercise information
     // updates the exercise objects and returns it with weight, sets, and reps info.
+    // ================
     public Exercise getUserExerciseData(User user, Exercise exercise) {
 
         long userId = user.getId();
@@ -593,40 +633,4 @@ public class DBAdapter {
         return exercise;
 
     }
-
-
-
-
-    /*
-    public User getUser(String userEmail) {
-
-        String selectQuery = "SELECT * FROM user WHERE email = '" + userEmail + "'";
-        Log.v("DBAdapter", selectQuery);
-
-        Cursor c = db.rawQuery(selectQuery, null);
-
-        if(c != null)
-            c.moveToFirst();
-
-        User user = new User();
-        user.setEmail(c.getString(c.getColumnIndex("email")));
-        // continue here using this tutorial http://www.androidhive.info/2013/09/android-sqlite-database-with-multiple-tables/
-
-    }
-    */
-
-
-
-
-
-
-
-
-
-
-    // Check if a user has a workout
-    // ******* continue here
-    //public boolean hasWorkout(String userEmail) {
-    //String dbQuery = "Select"
-    //}
 }

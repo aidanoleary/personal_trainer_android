@@ -32,6 +32,7 @@ public class WorkoutFragment extends Fragment {
 
     private String[] workoutNames;
     private String[] workoutDays;
+    private boolean[] workoutSavedList;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,10 +54,14 @@ public class WorkoutFragment extends Fragment {
         int numOfWorkouts = currentUser.getRoutine().getWorkouts().size();
         workoutNames = new String [numOfWorkouts];
         workoutDays = new String[numOfWorkouts];
+        workoutSavedList = new boolean[numOfWorkouts];
+
         for(int i = 0; i < numOfWorkouts; i++ ) {
             // Get the workout name from the data structure :-)
             workoutNames[i] = currentUser.getRoutine().getWorkouts().get(i).getName();
             workoutDays[i] = currentUser.getRoutine().getWorkouts().get(i).getDay();
+            workoutSavedList[i] = currentUser.getRoutine().getWorkouts().get(i).getIsSaved();
+
         }
 
 
@@ -77,7 +82,7 @@ public class WorkoutFragment extends Fragment {
         // Initialise the workout list by getting the ListView and setting the ArrayAdapter on it.
         // Also set the click listener on the items.
         ListView workoutList = (ListView) rootView.findViewById(R.id.listView);
-        workoutList.setAdapter(new WorkoutArrayAdapter(getActivity(), workoutNames, workoutDays));
+        workoutList.setAdapter(new WorkoutArrayAdapter(getActivity(), workoutNames, workoutDays, workoutSavedList));
         final Intent intent = new Intent(getActivity(), WorkoutExerciseListActivity.class);
 
         workoutList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -100,5 +105,8 @@ public class WorkoutFragment extends Fragment {
         // Set the points text when the fragment resumes.
         TextView pointsText = (TextView) rootView.findViewById(R.id.workoutPointsText);
         pointsText.setText("Points: " + Integer.toString(currentUser.getPoints()));
+
+
+
     }
 }
