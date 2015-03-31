@@ -164,6 +164,7 @@ public class DBAdapter {
         initialValues.put("user_id", user.getId());
         initialValues.put("points", user.getPoints());
         initialValues.put("total_reps", 0);
+        initialValues.put("total_sets", 0);
         initialValues.put("total_weight", 0);
         initialValues.put("total_cardio", 0);
         initialValues.put("total_distance", 0);
@@ -345,6 +346,7 @@ public class DBAdapter {
         ContentValues args = new ContentValues();
         args.put("points", user.getPoints());
         args.put("total_reps", user.getTotalReps());
+        args.put("total_sets", user.getTotalSets());
         args.put("total_weight", user.getTotalWeight());
         args.put("total_cardio", user.getTotalCardio());
         args.put("total_distance", user.getTotalDistance());
@@ -483,6 +485,7 @@ public class DBAdapter {
             // Update the user objects stats
             user.setPoints(mCursor.getInt(mCursor.getColumnIndex("points")));
             user.setTotalReps(mCursor.getInt(mCursor.getColumnIndex("total_reps")));
+            user.setTotalSets(mCursor.getInt(mCursor.getColumnIndex("total_sets")));
             user.setTotalWeight(mCursor.getDouble(mCursor.getColumnIndex("total_weight")));
             user.setTotalCardio(mCursor.getDouble(mCursor.getColumnIndex("total_cardio")));
             user.setTotalDistance(mCursor.getDouble(mCursor.getColumnIndex("total_distance")));

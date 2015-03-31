@@ -18,7 +18,7 @@ public class MainSingleton {
     private static MainSingleton sMainSingleton;
     private Context mAppContext;
     private SharedPreferences mSharedPreferences;
-    private User mUser;
+    private static User mUser;
     private DBAdapter db;
 
     private MainSingleton(Context appContext) {

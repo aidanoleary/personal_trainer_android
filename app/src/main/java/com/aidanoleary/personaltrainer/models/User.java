@@ -17,6 +17,7 @@ public class User {
     private Routine routine;
     private int points;
     private int totalReps;
+    private int totalSets;
     private double totalWeight;
     private double totalCardio;
     private double totalDistance;
@@ -32,6 +33,7 @@ public class User {
         weight = 0;
         routine = null;
         points = 0;
+        totalSets = 0;
         totalReps = 0;
         totalWeight = 0;
         totalCardio = 0;
@@ -128,6 +130,9 @@ public class User {
         this.totalWeight = totalWeight;
     }
 
+    public void setTotalSets(int totalSets) {
+        this.totalSets = totalSets;
+    }
 
     // getters
     public long getId() {
@@ -176,12 +181,9 @@ public class User {
         return totalReps;
     }
 
-
     public double getTotalDistance() {
         return totalDistance;
     }
-
-
 
     public double getTotalCardio() {
         return totalCardio;
@@ -189,5 +191,9 @@ public class User {
 
     public double getTotalWeight() {
         return totalWeight;
+    }
+
+    public int getTotalSets() {
+        return totalSets;
     }
 }

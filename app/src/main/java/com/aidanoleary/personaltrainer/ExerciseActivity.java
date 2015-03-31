@@ -153,8 +153,16 @@ public class ExerciseActivity extends Activity {
                     Log.v(TAG, "Exercise data failed to update");
 
                 // Update the users points and stats
-                // TODO continue here update database stats
                 currentUser.setPoints(currentUser.getPoints() + 10);
+                currentUser.setTotalWeight(currentUser.getTotalWeight() + exercise.getWeight());
+                currentUser.setTotalReps(currentUser.getTotalReps() + exercise.getReps());
+                currentUser.setTotalSets(currentUser.getTotalSets() + exercise.getSets());
+
+                boolean updatedUserStat = db.updateUserStat(currentUser);
+                if(!updatedUserStat)
+                    Log.v(TAG, "Stats failed to update");
+
+
                 Toast.makeText(getApplicationContext(), "+10 points", Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent(ExerciseActivity.this, WorkoutExerciseListActivity.class);
