@@ -37,7 +37,7 @@ public class LauncherActivity extends Activity {
     private static final String TAG = LauncherActivity.class.getSimpleName();
 
     // A static variable that contains the web address the web service is located on.
-    private static final String API_URL = "https://personal-trainer-api.herokuapp.com/";
+    private static final String API_URL = "https://gymbot.herokuapp.com/";
     private DBAdapter db;
 
     @Override

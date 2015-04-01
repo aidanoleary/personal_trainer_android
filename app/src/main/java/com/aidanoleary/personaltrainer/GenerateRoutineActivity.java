@@ -262,9 +262,9 @@ public class GenerateRoutineActivity extends Activity {
                     default:
                         // Create the users workout depending on the variables that have been
                         // generated, Then set the main singleton to this user.
-                        generateTheRoutine();
+                        User user = generateTheRoutine();
                         MainSingleton.get(getApplicationContext());
-                        MainSingleton.setUser(generateTheRoutine());
+                        MainSingleton.setUser(user);
 
                         // Load the Main Activity
                         // Set flags so user can't retreat
@@ -572,8 +572,6 @@ public class GenerateRoutineActivity extends Activity {
         user.setHeight(usersHeight);
         user.setWeight(usersWeight);
         user.setGender(usersGender);
-
-        // TODO set the users stats
 
         user.setRoutine(routine);
 

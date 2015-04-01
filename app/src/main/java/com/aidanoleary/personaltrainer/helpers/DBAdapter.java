@@ -279,6 +279,7 @@ public class DBAdapter {
 
             // Insert the user then add his Id to the user object.
             user.setId(insertUser(user));
+            Log.v(TAG, "User ID is: " + user.getId());
 
             // Create a variable to store the workout's ID's
             long currentWorkoutId = 0;
