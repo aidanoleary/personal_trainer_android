@@ -39,11 +39,14 @@ public class LauncherActivity extends Activity {
     // A static variable that contains the web address the web service is located on.
     private static final String API_URL = "https://gymbot.herokuapp.com/";
     private DBAdapter db;
+    private ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launcher);
+
+        dialog = new ProgressDialog(this);
 
         /*
          * This is the first activity that the program will launch
@@ -153,6 +156,16 @@ public class LauncherActivity extends Activity {
 
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if ((dialog != null) && dialog.isShowing())
+            dialog.dismiss();
+        dialog = null;
+    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -256,7 +269,7 @@ public class LauncherActivity extends Activity {
     // and upload them to local sqlite database
     private class GetExercisesLoadGeneratorTask extends AsyncTask<String, Void, String> {
 
-        private final ProgressDialog dialog = new ProgressDialog(LauncherActivity.this);
+        //private final ProgressDialog dialog = new ProgressDialog(LauncherActivity.this);
 
 
         // Make a progress dialog appear when the task starts, so user has to wait for completion.
@@ -342,6 +355,7 @@ public class LauncherActivity extends Activity {
 
                         // Add the exercise to sqlite database
                         db.insertExerciseWithId(currentExercise);
+
                     }
 
                     // Check if one of the entries exists in the database
@@ -367,7 +381,9 @@ public class LauncherActivity extends Activity {
                 e.printStackTrace();
             }
 
-            dialog.dismiss();
+            if ((dialog != null) && dialog.isShowing()) {
+                dialog.dismiss();
+            }
         }
     }
 }

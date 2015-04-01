@@ -68,7 +68,7 @@ public class WorkoutFragment extends Fragment {
         // Update the items in the view
         // ===============
         TextView welcomeText = (TextView) rootView.findViewById(R.id.workoutWelcomeText);
-        welcomeText.setText(welcomeText.getText() + currentUser.getEmail());
+        welcomeText.setText(currentUser.getEmail());
 
         //TextView pointsText = (TextView) rootView.findViewById(R.id.workoutPointsText);
         //pointsText.setText(pointsText.getText() + Integer.toString(currentUser.getPoints()));

@@ -25,7 +25,6 @@ import com.aidanoleary.personaltrainer.models.User;
 import com.aidanoleary.personaltrainer.models.Workout;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
 
@@ -701,7 +700,33 @@ public class GenerateRoutineActivity extends Activity {
 
         for(int i = 0; i < musclesAndDays.length; i++) {
             currentExercises = getDaysExercises(musclesAndDays[i]);
-            workoutName = Arrays.toString(musclesAndDays[i]);
+
+            // Get the name of the workout by building a string out of the array
+            /*
+            StringBuilder builder = new StringBuilder();
+            for(int j = 0; j < musclesAndDays[i].length; j++) {
+                // Check if the current day is the length - 1 if it is don't append the additional ', ' characters
+                if(j == musclesAndDays[i].length - 1) {
+                    builder.append(musclesAndDays[i]);
+                }
+                else {
+                    builder.append(musclesAndDays[i] + ", ");
+                }
+            }
+            workoutName = builder.toString();
+            */
+
+            StringBuilder builder = new StringBuilder();
+            for(String s : musclesAndDays[i]) {
+                s += ", ";
+                builder.append(s);
+            }
+
+            // Remove the last two characters of the string so ', ' doesn't appear.
+            builder.delete(builder.length() - 2, builder.length() - 1);
+            workoutName = builder.toString();
+
+
             Log.v(TAG, "The workout name 55555 is: " + workoutName);
             workouts.add(new Workout(workoutName, workoutDays.get(i), currentExercises));
         }

@@ -19,14 +19,6 @@
             android:layout_alignParentLeft="true"
             android:textSize="28sp" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/exercise_list_start"
-            android:id="@+id/exerciseListStartButton"
-            android:layout_alignParentRight="true"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp" />
     </RelativeLayout>
 
     <ListView
