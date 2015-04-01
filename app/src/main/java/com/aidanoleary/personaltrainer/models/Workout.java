@@ -14,6 +14,7 @@ public class Workout {
     private String day;
     private ArrayList<Exercise> exercises;
     private boolean isSaved;
+    private String date;
 
 
     // Constructors for the workout class
@@ -71,6 +72,10 @@ public class Workout {
         this.isSaved = isSaved;
     }
 
+    public void setDate(String date) {
+        this.date = date;
+    }
+
     // Getters
     public long getId() {
         return this.id;
@@ -113,5 +118,9 @@ public class Workout {
 
     public boolean getIsSaved() {
         return isSaved;
+    }
+
+    public String getDate() {
+        return date;
     }
 }

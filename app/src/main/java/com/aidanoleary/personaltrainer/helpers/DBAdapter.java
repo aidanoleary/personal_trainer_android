@@ -637,4 +637,46 @@ public class DBAdapter {
         return exercise;
 
     }
+
+    // Get the user workouts for a particular user by his email
+    public ArrayList<Workout> getUserWorkoutsByEmail(String userEmail) {
+
+        // TODO come back to this and also retrieve user_workout_exercises from the database
+        // Create an array list to hold the users workouts.
+        ArrayList<Workout> userWorkouts = new ArrayList<Workout>();
+
+
+        // Create the sql query
+        String selectQuery = "select user_workout.date, workout.* FROM user_workout " +
+                             "JOIN workout JOIN user WHERE user.email = '" + userEmail + "' " +
+                             "AND user.id = user_workout.user_id AND user_workout.id = workout.id " +
+                             "ORDER BY date;";
+
+        Cursor mCursor = db.rawQuery(selectQuery, null);
+
+        if (mCursor != null) {
+            // Cursor returned results
+            mCursor.moveToFirst();
+            Workout currentWorkout;
+
+            for(int i = 0; i < mCursor.getCount(); i++) {
+                currentWorkout = new Workout();
+                currentWorkout.setId(mCursor.getLong(mCursor.getColumnIndex("id")));
+                currentWorkout.setName(mCursor.getString(mCursor.getColumnIndex("name")));
+                currentWorkout.setDay(mCursor.getString(mCursor.getColumnIndex("description")));
+                currentWorkout.setRoutineId(mCursor.getLong(mCursor.getColumnIndex("routine_id")));
+                currentWorkout.setDate(mCursor.getString(mCursor.getColumnIndex("date")));
+
+                Log.v(TAG, "the current workouts date is : " + currentWorkout.getDate());
+                userWorkouts.add(currentWorkout);
+                mCursor.moveToNext();
+
+            }
+        }
+
+
+
+        return userWorkouts;
+
+    }
 }
