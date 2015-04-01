@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -76,6 +77,8 @@ public class ExerciseActivity extends Activity {
         // Set the description text
         TextView descriptionText = (TextView) findViewById(R.id.exerciseDescriptionText);
         descriptionText.setText(exercise.getDescription());
+        // make the description textview scrollable.
+        descriptionText.setMovementMethod(new ScrollingMovementMethod());
 
         // Set the weight
         TextView weightText = (TextView) findViewById(R.id.exerciseWeightText);
