@@ -158,7 +158,7 @@ public class ExerciseActivity extends Activity {
                 // Update the users points and stats
                 currentUser.setPoints(currentUser.getPoints() + 10);
                 currentUser.setTotalWeight(currentUser.getTotalWeight() + exercise.getWeight());
-                currentUser.setTotalReps(currentUser.getTotalReps() + exercise.getReps());
+                currentUser.setTotalReps(currentUser.getTotalReps() + exercise.getReps() * exercise.getSets());
                 currentUser.setTotalSets(currentUser.getTotalSets() + exercise.getSets());
 
                 boolean updatedUserStat = db.updateUserStat(currentUser);

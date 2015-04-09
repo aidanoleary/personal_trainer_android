@@ -97,11 +97,9 @@ public class MainActivity extends Activity
     public void onNavigationDrawerItemSelected(int position) {
 
         Fragment objFragment = null;
-        //ListFragment objListFragment = null;
 
         switch (position) {
             case 0:
-                //objListFragment = new WorkoutFragment();
                 objFragment = new WorkoutFragment();
                 break;
             case 1:
