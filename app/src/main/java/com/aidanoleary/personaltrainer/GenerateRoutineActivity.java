@@ -283,6 +283,21 @@ public class GenerateRoutineActivity extends Activity {
             @Override
             public void onClick(View v) {
                 switch (currentQuestionNumber) {
+                    case 1:
+                        // Send the user back to the launcher activity and log them out
+                        // Delete the shared preferences values for the local user.
+                        SharedPreferences preferences = getApplicationContext().getSharedPreferences("CurrentUser", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.remove("Email");
+                        editor.remove("AuthToken");
+                        editor.commit();
+
+                        Intent launcherIntent = new Intent(GenerateRoutineActivity.this, LauncherActivity.class);
+                        launcherIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        launcherIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(launcherIntent);
+                        break;
+
                     case 2:
                         previousQuestion(R.layout.activity_generate_routine_q1);
                         break;
