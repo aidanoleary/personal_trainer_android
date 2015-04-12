@@ -114,7 +114,6 @@ public class ExerciseActivity extends Activity {
                 // Check the value of the progress bar to determine how to adjust the weight of the exercise.
                 switch (difficultyBar.getProgress()) {
 
-                    // TODO maybe change this to include more difficulties and a smaller weight increase/decrease 1.25 instead of 2.5
                     case 0:
                         for(int i = 0; i < 2; i++)
                             exercise.increaseWeight();

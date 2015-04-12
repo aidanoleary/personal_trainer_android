@@ -102,15 +102,11 @@ public class WorkoutExerciseListActivity extends Activity {
                 if (exercise.isCompleted())
                     numCompleted++;
             }
-
             // Check if the number of completed exercises is equal to the number of exercises
             if (numCompleted == currentWorkout.getExerciseList().size()) {
-
-
                 // Save the workout to the database. By inserting a user workout entry.
                 db = new DBAdapter(this);
                 db.open();
-
                 long userWorkoutId = db.insertUserWorkout(currentUser,currentWorkout);
 
                 // Loop through exercises in the workout saving each one to the database.
@@ -127,7 +123,6 @@ public class WorkoutExerciseListActivity extends Activity {
                 // I don't want the intent to appear on the stack so set the clear top flag.
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
-
                 // Show a toast to let the user know their workout has been saved.
                 Toast.makeText(this, "Workout has been saved.", Toast.LENGTH_SHORT).show();
             }

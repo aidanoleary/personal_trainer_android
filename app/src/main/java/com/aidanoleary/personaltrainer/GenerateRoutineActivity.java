@@ -401,9 +401,6 @@ public class GenerateRoutineActivity extends Activity {
         // ===========
         // Set the number of exercises dependent on the workout time
         // The specifies the number of exercises that will be in each routine.
-
-        //TODO come back and work on this later if I have time or think of a way of doing this.
-
         switch (workoutTime) {
             case 0:
                 //0m - 30m
@@ -687,7 +684,6 @@ public class GenerateRoutineActivity extends Activity {
     // each string with these should represent a muscle that will be trained.
     // =====================
     private ArrayList<Workout> getRoutinesWorkouts(String[][] musclesAndDays) {
-        //musclesAndDays = new String[][] {{"chest"}, {"back"}, {"triceps", "biceps"}, {"legs", "abs"}, {"shoulders"}};
 
         // create a String to use when adding the workouts name
         String workoutName = "";
@@ -701,21 +697,6 @@ public class GenerateRoutineActivity extends Activity {
         for(int i = 0; i < musclesAndDays.length; i++) {
             currentExercises = getDaysExercises(musclesAndDays[i]);
 
-            // Get the name of the workout by building a string out of the array
-            /*
-            StringBuilder builder = new StringBuilder();
-            for(int j = 0; j < musclesAndDays[i].length; j++) {
-                // Check if the current day is the length - 1 if it is don't append the additional ', ' characters
-                if(j == musclesAndDays[i].length - 1) {
-                    builder.append(musclesAndDays[i]);
-                }
-                else {
-                    builder.append(musclesAndDays[i] + ", ");
-                }
-            }
-            workoutName = builder.toString();
-            */
-
             StringBuilder builder = new StringBuilder();
             for(String s : musclesAndDays[i]) {
                 s += ", ";
@@ -726,8 +707,6 @@ public class GenerateRoutineActivity extends Activity {
             builder.delete(builder.length() - 2, builder.length() - 1);
             workoutName = builder.toString();
 
-
-            Log.v(TAG, "The workout name 55555 is: " + workoutName);
             workouts.add(new Workout(workoutName, workoutDays.get(i), currentExercises));
         }
 

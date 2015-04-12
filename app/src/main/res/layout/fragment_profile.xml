@@ -37,27 +37,63 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Age: "
-                android:id="@+id/profileAgeText"
-                android:layout_alignParentLeft="true"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:textColor="#ffffff" />
+                android:layout_alignParentLeft="true">
 
-            <TextView
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Age: "
+                    android:id="@+id/profileAgeText"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="#ffffff" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Gender: "
+                    android:id="@+id/profileGenderText"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="#ffffff" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Gender: "
-                android:id="@+id/profileGenderText"
-                android:layout_alignParentRight="true"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:textColor="#ffffff" />
+                android:layout_alignParentRight="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Height: "
+                    android:id="@+id/profileHeightText"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="#ffffff" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Weight: "
+                    android:id="@+id/profileWeightText"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="#ffffff" />
+            </LinearLayout>
         </RelativeLayout>
 
         <RelativeLayout
@@ -66,27 +102,6 @@
             android:id="@+id/relativeLayout"
             android:layout_gravity="center_horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Height: "
-                android:id="@+id/profileHeightText"
-                android:layout_alignParentLeft="true"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:textColor="#ffffff" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Weight: "
-                android:id="@+id/profileWeightText"
-                android:layout_alignParentRight="true"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:textColor="#ffffff" />
         </RelativeLayout>
     </LinearLayout>
 

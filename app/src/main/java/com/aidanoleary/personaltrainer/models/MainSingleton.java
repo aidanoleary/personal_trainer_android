@@ -23,20 +23,12 @@ public class MainSingleton {
 
     private MainSingleton(Context appContext) {
         mAppContext = appContext;
-        //mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(appContext);
 
         mSharedPreferences = appContext.getSharedPreferences("CurrentUser", Context.MODE_PRIVATE);
         db = new DBAdapter(appContext);
 
         // Initialise all the components of the main data structure.
-        //mUser.setEmail(mSharedPreferences.getString("Email", ""));
-
-
         // Check if the currently signed in user exists in the database.
-        // TODO this is going to make the program crash if the exercises have not been loaded into the database.
-
-
-
         db.open();
 
         if(db.isDataInDb("user", "email", "'" + mSharedPreferences.getString("Email", "") + "'")) {
@@ -52,8 +44,6 @@ public class MainSingleton {
         }
         else {
             // Create 6 exercises
-
-
             ArrayList<Exercise> exercises = new ArrayList<Exercise>();
             for (int i = 0; i < 6; i++) {
                 exercises.add(new Exercise("test exercise " + i));

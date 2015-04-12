@@ -269,9 +269,6 @@ public class LauncherActivity extends Activity {
     // and upload them to local sqlite database
     private class GetExercisesLoadGeneratorTask extends AsyncTask<String, Void, String> {
 
-        //private final ProgressDialog dialog = new ProgressDialog(LauncherActivity.this);
-
-
         // Make a progress dialog appear when the task starts, so user has to wait for completion.
         protected void onPreExecute() {
             dialog.setTitle("Downloading Exercises");
